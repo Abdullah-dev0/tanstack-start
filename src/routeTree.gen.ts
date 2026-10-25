@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as NotesRouteRouteImport } from './routes/notes/route'
+import { Route as RegisterRouteImport } from './routes/register'
 import { Route as SsrLabRouteRouteImport } from './routes/ssr-lab/route'
 import { Route as ApiNotesRouteImport } from './routes/api/notes'
 import { Route as ApiStatsRouteImport } from './routes/api/stats'
@@ -23,6 +24,7 @@ import { Route as SsrLabIndexRouteImport } from './routes/ssr-lab/index'
 import { Route as SsrLabClientRouteImport } from './routes/ssr-lab/client'
 import { Route as SsrLabDataOnlyRouteImport } from './routes/ssr-lab/data-only'
 import { Route as SsrLabFullRouteImport } from './routes/ssr-lab/full'
+import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -42,6 +44,11 @@ const LoginRoute = LoginRouteImport.update({
 const NotesRouteRoute = NotesRouteRouteImport.update({
   id: '/notes',
   path: '/notes',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RegisterRoute = RegisterRouteImport.update({
+  id: '/register',
+  path: '/register',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SsrLabRouteRoute = SsrLabRouteRouteImport.update({
@@ -94,6 +101,11 @@ const SsrLabFullRoute = SsrLabFullRouteImport.update({
   path: '/full',
   getParentRoute: () => SsrLabRouteRoute,
 } as any)
+const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
+  id: '/api/auth/$',
+  path: '/api/auth/$',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -101,6 +113,7 @@ export interface FileRoutesByFullPath {
   '/ssr-lab': typeof SsrLabRouteRouteWithChildren
   '/about': typeof AboutRoute
   '/login': typeof LoginRoute
+  '/register': typeof RegisterRoute
   '/api/notes': typeof ApiNotesRoute
   '/api/stats': typeof ApiStatsRoute
   '/notes/$noteId': typeof NotesNoteIdRoute
@@ -110,11 +123,13 @@ export interface FileRoutesByFullPath {
   '/ssr-lab/full': typeof SsrLabFullRoute
   '/notes/': typeof NotesIndexRoute
   '/ssr-lab/': typeof SsrLabIndexRoute
+  '/api/auth/$': typeof ApiAuthSplatRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/login': typeof LoginRoute
+  '/register': typeof RegisterRoute
   '/api/notes': typeof ApiNotesRoute
   '/api/stats': typeof ApiStatsRoute
   '/notes/$noteId': typeof NotesNoteIdRoute
@@ -124,6 +139,7 @@ export interface FileRoutesByTo {
   '/ssr-lab/full': typeof SsrLabFullRoute
   '/notes': typeof NotesIndexRoute
   '/ssr-lab': typeof SsrLabIndexRoute
+  '/api/auth/$': typeof ApiAuthSplatRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -132,6 +148,7 @@ export interface FileRoutesById {
   '/ssr-lab': typeof SsrLabRouteRouteWithChildren
   '/about': typeof AboutRoute
   '/login': typeof LoginRoute
+  '/register': typeof RegisterRoute
   '/api/notes': typeof ApiNotesRoute
   '/api/stats': typeof ApiStatsRoute
   '/notes/$noteId': typeof NotesNoteIdRoute
@@ -141,6 +158,7 @@ export interface FileRoutesById {
   '/ssr-lab/full': typeof SsrLabFullRoute
   '/notes/': typeof NotesIndexRoute
   '/ssr-lab/': typeof SsrLabIndexRoute
+  '/api/auth/$': typeof ApiAuthSplatRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -150,6 +168,7 @@ export interface FileRouteTypes {
     | '/ssr-lab'
     | '/about'
     | '/login'
+    | '/register'
     | '/api/notes'
     | '/api/stats'
     | '/notes/$noteId'
@@ -159,11 +178,13 @@ export interface FileRouteTypes {
     | '/ssr-lab/full'
     | '/notes/'
     | '/ssr-lab/'
+    | '/api/auth/$'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/about'
     | '/login'
+    | '/register'
     | '/api/notes'
     | '/api/stats'
     | '/notes/$noteId'
@@ -173,6 +194,7 @@ export interface FileRouteTypes {
     | '/ssr-lab/full'
     | '/notes'
     | '/ssr-lab'
+    | '/api/auth/$'
   id:
     | '__root__'
     | '/'
@@ -180,6 +202,7 @@ export interface FileRouteTypes {
     | '/ssr-lab'
     | '/about'
     | '/login'
+    | '/register'
     | '/api/notes'
     | '/api/stats'
     | '/notes/$noteId'
@@ -189,6 +212,7 @@ export interface FileRouteTypes {
     | '/ssr-lab/full'
     | '/notes/'
     | '/ssr-lab/'
+    | '/api/auth/$'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -197,8 +221,10 @@ export interface RootRouteChildren {
   SsrLabRouteRoute: typeof SsrLabRouteRouteWithChildren
   AboutRoute: typeof AboutRoute
   LoginRoute: typeof LoginRoute
+  RegisterRoute: typeof RegisterRoute
   ApiNotesRoute: typeof ApiNotesRoute
   ApiStatsRoute: typeof ApiStatsRoute
+  ApiAuthSplatRoute: typeof ApiAuthSplatRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -229,6 +255,13 @@ declare module '@tanstack/react-router' {
       path: '/notes'
       fullPath: '/notes'
       preLoaderRoute: typeof NotesRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/register': {
+      id: '/register'
+      path: '/register'
+      fullPath: '/register'
+      preLoaderRoute: typeof RegisterRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/ssr-lab': {
@@ -301,6 +334,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SsrLabFullRouteImport
       parentRoute: typeof SsrLabRouteRoute
     }
+    '/api/auth/$': {
+      id: '/api/auth/$'
+      path: '/api/auth/$'
+      fullPath: '/api/auth/$'
+      preLoaderRoute: typeof ApiAuthSplatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -344,8 +384,10 @@ const rootRouteChildren: RootRouteChildren = {
   SsrLabRouteRoute: SsrLabRouteRouteWithChildren,
   AboutRoute: AboutRoute,
   LoginRoute: LoginRoute,
+  RegisterRoute: RegisterRoute,
   ApiNotesRoute: ApiNotesRoute,
   ApiStatsRoute: ApiStatsRoute,
+  ApiAuthSplatRoute: ApiAuthSplatRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

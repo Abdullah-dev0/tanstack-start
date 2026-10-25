@@ -1,14 +1,14 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { listNotes } from '../../utils/notes.server'
+import { countAllNotes } from '../../utils/notes.server'
 
 // 🌍 PUBLIC endpoint: /api/stats — the same answer for EVERYONE (no login)
 export const Route = createFileRoute('/api/stats')({
   server: {
     handlers: {
       GET: async () => {
-        const notes = await listNotes()
+        const totalNotes = await countAllNotes()
         return Response.json(
-          { totalNotes: notes.length, time: new Date().toLocaleTimeString() },
+          { totalNotes, time: new Date().toLocaleTimeString() },
           {
             headers: {
               // 🌍 PUBLIC + same for everyone → browsers & CDNs may keep it

@@ -5,8 +5,8 @@ import {
   redirect,
   useNavigate,
 } from '@tanstack/react-router'
-import { useServerFn } from '@tanstack/react-start'
-import { getAuthStatus, logout } from '../../utils/auth.functions'
+import { getSession } from '../../lib/auth.functions'
+import { authClient } from '../../lib/auth-client'
 
 export const Route = createFileRoute('/notes')({
   // 🔒 PRIVATE pages (logged-in data) → nobody may keep a copy
@@ -17,27 +17,31 @@ export const Route = createFileRoute('/notes')({
   // Not logged in? → send to /login.
   // (This is for a nice UX. The real security is authMiddleware.)
   beforeLoad: async () => {
-    const { loggedIn } = await getAuthStatus()
-    if (!loggedIn) throw redirect({ to: '/login' })
+    const session = await getSession()
+    if (!session) throw redirect({ to: '/login' })
+    return { user: session.user } // 👤 child pages can read it with Route.useRouteContext()
   },
   component: NotesLayout,
 })
 
 function NotesLayout() {
-  const logoutFn = useServerFn(logout)
+  const { user } = Route.useRouteContext()
   const navigate = useNavigate()
 
   async function handleLogout() {
-    await logoutFn()
+    await authClient.signOut() // 📖 Better Auth: ends the session
     await navigate({ to: '/login' })
   }
 
   return (
     <main className="mx-auto max-w-5xl px-6 pt-16 sm:pt-20">
       <div className="mb-10 flex flex-wrap items-end justify-between gap-4">
-        <h1 className="text-4xl font-semibold tracking-tighter sm:text-5xl">
-          My Notes
-        </h1>
+        <div>
+          <h1 className="text-4xl font-semibold tracking-tighter sm:text-5xl">
+            My Notes
+          </h1>
+          <p className="mt-1 text-sm text-zinc-500">👤 {user.email}</p>
+        </div>
         <div className="flex items-center gap-2">
           <Link
             to="/notes/new"

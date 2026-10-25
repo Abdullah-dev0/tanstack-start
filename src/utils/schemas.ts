@@ -16,5 +16,12 @@ export const NoteId = z.object({
 })
 
 export const LoginInput = z.object({
+  email: z.email('Enter a valid email'),
   password: z.string().min(1, 'Password is required'),
+})
+
+export const RegisterInput = z.object({
+  name: z.string().trim().min(1, 'Name is required'),
+  email: z.email('Enter a valid email'),
+  password: z.string().min(8, 'Password must be at least 8 characters'),
 })

@@ -1,28 +1,38 @@
 import { useState } from 'react'
-import { createFileRoute, useNavigate } from '@tanstack/react-router'
-import { useServerFn } from '@tanstack/react-start'
-import { login } from '../utils/auth.functions'
+import {
+  Link,
+  createFileRoute,
+  useNavigate,
+  useRouter,
+} from '@tanstack/react-router'
+import { authClient } from '../lib/auth-client'
 
 export const Route = createFileRoute('/login')({
   head: () => ({ meta: [{ title: 'Log in | My Notes' }] }),
   component: LoginPage,
 })
 
+const input =
+  'w-full rounded-xl border border-zinc-900/10 bg-transparent px-4 py-2 dark:border-white/10'
+
 function LoginPage() {
-  const loginFn = useServerFn(login)
+  const router = useRouter()
   const navigate = useNavigate()
 
+  const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
-    try {
-      await loginFn({ data: { password } }) // server checks password, sets cookie
-      await navigate({ to: '/notes' })
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Something went wrong')
+    // 📖 Better Auth: sign in → it checks the password and sets the cookie
+    const result = await authClient.signIn.email({ email, password })
+    if (result.error) {
+      setError(result.error.message ?? 'Something went wrong')
+      return
     }
+    await router.invalidate() // the user changed → reload data
+    await navigate({ to: '/notes' })
   }
 
   return (
@@ -32,17 +42,20 @@ function LoginPage() {
         className="space-y-4 rounded-3xl border border-zinc-900/5 bg-white p-8 shadow-sm dark:border-white/10 dark:bg-zinc-900/50"
       >
         <h1 className="text-3xl font-semibold tracking-tighter">Log in</h1>
-        <p className="text-sm text-zinc-500 dark:text-zinc-400">
-          🧪 Learning demo — the password is <code>APP_PASSWORD</code> in your{' '}
-          <code>.env</code> file
-        </p>
 
+        <input
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="Email"
+          className={input}
+        />
         <input
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           placeholder="Password"
-          className="w-full rounded-xl border border-zinc-900/10 bg-transparent px-4 py-2 dark:border-white/10"
+          className={input}
         />
 
         {error && <p className="text-sm text-red-600">{error}</p>}
@@ -53,6 +66,13 @@ function LoginPage() {
         >
           Log in
         </button>
+
+        <p className="text-sm text-zinc-500">
+          No account?{' '}
+          <Link to="/register" className="underline">
+            Create one
+          </Link>
+        </p>
       </form>
     </main>
   )
