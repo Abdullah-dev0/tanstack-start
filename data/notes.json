@@ -1,5 +1,487 @@
 [
-  { "id": "1", "title": "Learn routing", "body": "Files become URLs." },
-  { "id": "2", "title": "Learn params", "body": "$noteId captures the URL." },
-  { "id": "3", "title": "Learn search", "body": "?q= is typed state." }
+  {
+    "id": "1761350401000",
+    "title": "Meeting note #1",
+    "body": "Sync with design on the onboarding flow."
+  },
+  {
+    "id": "1761350403000",
+    "title": "Workout note #1",
+    "body": "5k run, then 15 minutes of stretching."
+  },
+  {
+    "id": "1761350404000",
+    "title": "Recipe note #1",
+    "body": "Bake sourdough: 70% hydration, overnight proof."
+  },
+  {
+    "id": "1761350405000",
+    "title": "Travel note #1",
+    "body": "List museums to visit on day two."
+  },
+  {
+    "id": "1761350406000",
+    "title": "Idea note #1",
+    "body": "A tiny app to track house plant watering."
+  },
+  {
+    "id": "1761350407000",
+    "title": "Bug note #1",
+    "body": "Dark mode flashes on first load."
+  },
+  {
+    "id": "1761350408000",
+    "title": "Reading note #1",
+    "body": "TanStack Router docs on search params."
+  },
+  {
+    "id": "1761350409000",
+    "title": "Budget note #1",
+    "body": "Review subscriptions and cancel unused ones."
+  },
+  {
+    "id": "1761350410000",
+    "title": "Garden note #1",
+    "body": "Repot the monstera into a bigger pot."
+  },
+  {
+    "id": "1761350411000",
+    "title": "Movie note #1",
+    "body": "Add three new titles to the watchlist."
+  },
+  {
+    "id": "1761350412000",
+    "title": "Podcast note #1",
+    "body": "Episode on system design trade-offs."
+  },
+  {
+    "id": "1761350413000",
+    "title": "Gift note #1",
+    "body": "Anniversary: book a dinner reservation."
+  },
+  {
+    "id": "1761350414000",
+    "title": "Project note #1",
+    "body": "Refactor note storage into its own module."
+  },
+  {
+    "id": "1761350415000",
+    "title": "Learning note #1",
+    "body": "Practice TypeScript generics for 30 minutes."
+  },
+  {
+    "id": "1761350416000",
+    "title": "Habit note #1",
+    "body": "No phone for the first hour of the day."
+  },
+  {
+    "id": "1761350417000",
+    "title": "Call note #1",
+    "body": "Phone the bank about the card renewal."
+  },
+  {
+    "id": "1761350418000",
+    "title": "Errand note #1",
+    "body": "Return the library books by Friday."
+  },
+  {
+    "id": "1761350419000",
+    "title": "Journal note #1",
+    "body": "Reflect on what went well this week."
+  },
+  {
+    "id": "1761350420000",
+    "title": "Groceries note #2",
+    "body": "Pick up lemons and fresh basil for pasta night."
+  },
+  {
+    "id": "1761350421000",
+    "title": "Meeting note #2",
+    "body": "Discuss Q3 roadmap and hiring plan."
+  },
+  {
+    "id": "1761350422000",
+    "title": "Book note #2",
+    "body": "Lend a copy to Sam after finishing."
+  },
+  {
+    "id": "1761350423000",
+    "title": "Workout note #2",
+    "body": "Rest day — light walk and mobility work."
+  },
+  {
+    "id": "1761350424000",
+    "title": "Recipe note #2",
+    "body": "Try the lentil curry with coconut milk."
+  },
+  {
+    "id": "1761350425000",
+    "title": "Travel note #2",
+    "body": "Pack chargers, passport, and a rain jacket."
+  },
+  {
+    "id": "1761350426000",
+    "title": "Idea note #2",
+    "body": "Weekend hackathon theme: offline-first notes."
+  },
+  {
+    "id": "1761350427000",
+    "title": "Bug note #2",
+    "body": "Search input loses focus after navigation."
+  },
+  {
+    "id": "1761350428000",
+    "title": "Reading note #2",
+    "body": "Paper on CRDTs for collaborative editing."
+  },
+  {
+    "id": "1761350429000",
+    "title": "Budget note #2",
+    "body": "Track dining-out spending this month."
+  },
+  {
+    "id": "1761350430000",
+    "title": "Garden note #2",
+    "body": "Water tomatoes and check for aphids."
+  },
+  {
+    "id": "1761350431000",
+    "title": "Movie note #2",
+    "body": "Rewatch a classic for movie night."
+  },
+  {
+    "id": "1761350432000",
+    "title": "Podcast note #2",
+    "body": "Catch up on the weekly tech news show."
+  },
+  {
+    "id": "1761350433000",
+    "title": "Gift note #2",
+    "body": "Birthday gift idea: a nice notebook and pens."
+  },
+  {
+    "id": "1761350434000",
+    "title": "Project note #2",
+    "body": "Write README with setup instructions."
+  },
+  {
+    "id": "1761350435000",
+    "title": "Learning note #2",
+    "body": "Review notes on SQL window functions."
+  },
+  {
+    "id": "1761350436000",
+    "title": "Habit note #2",
+    "body": "Drink water first thing in the morning."
+  },
+  {
+    "id": "1761350437000",
+    "title": "Call note #2",
+    "body": "Catch up with an old friend this weekend."
+  },
+  {
+    "id": "1761350438000",
+    "title": "Errand note #2",
+    "body": "Get the bike tire fixed."
+  },
+  {
+    "id": "1761350439000",
+    "title": "Journal note #2",
+    "body": "Grateful for a quiet, productive morning."
+  },
+  {
+    "id": "1761350440000",
+    "title": "Groceries note #3",
+    "body": "Restock coffee beans and olive oil."
+  },
+  {
+    "id": "1761350441000",
+    "title": "Meeting note #3",
+    "body": "Review sprint retro action items."
+  },
+  {
+    "id": "1761350443000",
+    "title": "Workout note #3",
+    "body": "Upper body: push-ups, rows, overhead press."
+  },
+  {
+    "id": "1761350444000",
+    "title": "Recipe note #3",
+    "body": "Shakshuka with feta and extra cumin."
+  },
+  {
+    "id": "1761350445000",
+    "title": "Travel note #3",
+    "body": "Book train tickets and check the hotel check-in time."
+  },
+  {
+    "id": "1761350446000",
+    "title": "Idea note #3",
+    "body": "Write a blog post about server functions."
+  },
+  {
+    "id": "1761350447000",
+    "title": "Bug note #3",
+    "body": "Note list does not refresh after delete."
+  },
+  {
+    "id": "1761350448000",
+    "title": "Reading note #3",
+    "body": "Article on CSS cascade layers."
+  },
+  {
+    "id": "1761350449000",
+    "title": "Budget note #3",
+    "body": "Set aside savings for the summer trip."
+  },
+  {
+    "id": "1761350450000",
+    "title": "Garden note #3",
+    "body": "Plant garlic before the first frost."
+  },
+  {
+    "id": "1761350451000",
+    "title": "Movie note #3",
+    "body": "Watch the documentary recommended by Alex."
+  },
+  {
+    "id": "1761350452000",
+    "title": "Podcast note #3",
+    "body": "Interview about remote team culture."
+  },
+  {
+    "id": "1761350453000",
+    "title": "Gift note #3",
+    "body": "Housewarming: a small herb planter."
+  },
+  {
+    "id": "1761350454000",
+    "title": "Project note #3",
+    "body": "Set up CI and add a lint step."
+  },
+  {
+    "id": "1761350455000",
+    "title": "Learning note #3",
+    "body": "Finish the module on React Server Components."
+  },
+  {
+    "id": "1761350456000",
+    "title": "Habit note #3",
+    "body": "Ten minutes of journaling before bed."
+  },
+  {
+    "id": "1761350457000",
+    "title": "Call note #3",
+    "body": "Call the dentist to reschedule the appointment."
+  },
+  {
+    "id": "1761350458000",
+    "title": "Errand note #3",
+    "body": "Drop off the package at the post office."
+  },
+  {
+    "id": "1761350459000",
+    "title": "Journal note #3",
+    "body": "Note one thing to improve tomorrow."
+  },
+  {
+    "id": "1761350460000",
+    "title": "Groceries note #4",
+    "body": "Milk, eggs, spinach, and oat flour."
+  },
+  {
+    "id": "1761350461000",
+    "title": "Meeting note #4",
+    "body": "Sync with design on the onboarding flow."
+  },
+  {
+    "id": "1761350462000",
+    "title": "Book note #4",
+    "body": "Start the next title on the reading list."
+  },
+  {
+    "id": "1761350463000",
+    "title": "Workout note #4",
+    "body": "5k run, then 15 minutes of stretching."
+  },
+  {
+    "id": "1761350464000",
+    "title": "Recipe note #4",
+    "body": "Bake sourdough: 70% hydration, overnight proof."
+  },
+  {
+    "id": "1761350465000",
+    "title": "Travel note #4",
+    "body": "List museums to visit on day two."
+  },
+  {
+    "id": "1761350466000",
+    "title": "Idea note #4",
+    "body": "A tiny app to track house plant watering."
+  },
+  {
+    "id": "1761350467000",
+    "title": "Bug note #4",
+    "body": "Dark mode flashes on first load."
+  },
+  {
+    "id": "1761350468000",
+    "title": "Reading note #4",
+    "body": "TanStack Router docs on search params."
+  },
+  {
+    "id": "1761350469000",
+    "title": "Budget note #4",
+    "body": "Review subscriptions and cancel unused ones."
+  },
+  {
+    "id": "1761350470000",
+    "title": "Garden note #4",
+    "body": "Repot the monstera into a bigger pot."
+  },
+  {
+    "id": "1761350471000",
+    "title": "Movie note #4",
+    "body": "Add three new titles to the watchlist."
+  },
+  {
+    "id": "1761350472000",
+    "title": "Podcast note #4",
+    "body": "Episode on system design trade-offs."
+  },
+  {
+    "id": "1761350473000",
+    "title": "Gift note #4",
+    "body": "Anniversary: book a dinner reservation."
+  },
+  {
+    "id": "1761350474000",
+    "title": "Project note #4",
+    "body": "Refactor note storage into its own module."
+  },
+  {
+    "id": "1761350475000",
+    "title": "Learning note #4",
+    "body": "Practice TypeScript generics for 30 minutes."
+  },
+  {
+    "id": "1761350476000",
+    "title": "Habit note #4",
+    "body": "No phone for the first hour of the day."
+  },
+  {
+    "id": "1761350477000",
+    "title": "Call note #4",
+    "body": "Phone the bank about the card renewal."
+  },
+  {
+    "id": "1761350478000",
+    "title": "Errand note #4",
+    "body": "Return the library books by Friday."
+  },
+  {
+    "id": "1761350479000",
+    "title": "Journal note #4",
+    "body": "Reflect on what went well this week."
+  },
+  {
+    "id": "1761350480000",
+    "title": "Groceries note #5",
+    "body": "Pick up lemons and fresh basil for pasta night."
+  },
+  {
+    "id": "1761350481000",
+    "title": "Meeting note #5",
+    "body": "Discuss Q3 roadmap and hiring plan."
+  },
+  {
+    "id": "1761350482000",
+    "title": "Book note #5",
+    "body": "Lend a copy to Sam after finishing."
+  },
+  {
+    "id": "1761350483000",
+    "title": "Workout note #5",
+    "body": "Rest day — light walk and mobility work."
+  },
+  {
+    "id": "1761350484000",
+    "title": "Recipe note #5",
+    "body": "Try the lentil curry with coconut milk."
+  },
+  {
+    "id": "1761350485000",
+    "title": "Travel note #5",
+    "body": "Pack chargers, passport, and a rain jacket."
+  },
+  {
+    "id": "1761350486000",
+    "title": "Idea note #5",
+    "body": "Weekend hackathon theme: offline-first notes."
+  },
+  {
+    "id": "1761350487000",
+    "title": "Bug note #5",
+    "body": "Search input loses focus after navigation."
+  },
+  {
+    "id": "1761350488000",
+    "title": "Reading note #5",
+    "body": "Paper on CRDTs for collaborative editing."
+  },
+  {
+    "id": "1761350489000",
+    "title": "Budget note #5",
+    "body": "Track dining-out spending this month."
+  },
+  {
+    "id": "1761350490000",
+    "title": "Garden note #5",
+    "body": "Water tomatoes and check for aphids."
+  },
+  {
+    "id": "1761350491000",
+    "title": "Movie note #5",
+    "body": "Rewatch a classic for movie night."
+  },
+  {
+    "id": "1761350492000",
+    "title": "Podcast note #5",
+    "body": "Catch up on the weekly tech news show."
+  },
+  {
+    "id": "1761350493000",
+    "title": "Gift note #5",
+    "body": "Birthday gift idea: a nice notebook and pens."
+  },
+  {
+    "id": "1761350494000",
+    "title": "Project note #5",
+    "body": "Write README with setup instructions."
+  },
+  {
+    "id": "1761350495000",
+    "title": "Learning note #5",
+    "body": "Review notes on SQL window functions."
+  },
+  {
+    "id": "1761350496000",
+    "title": "Habit note #5",
+    "body": "Drink water first thing in the morning."
+  },
+  {
+    "id": "1761350497000",
+    "title": "Call note #5",
+    "body": "Catch up with an old friend this weekend."
+  },
+  {
+    "id": "1761350498000",
+    "title": "Errand note #5",
+    "body": "Get the bike tire fixed."
+  },
+  {
+    "id": "1761350499000",
+    "title": "Journal note #5",
+    "body": "Grateful for a quiet, productive morning."
+  }
 ]
