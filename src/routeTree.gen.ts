@@ -11,7 +11,9 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AboutRouteImport } from './routes/about'
+import { Route as LoginRouteImport } from './routes/login'
 import { Route as NotesRouteRouteImport } from './routes/notes/route'
+import { Route as ApiNotesRouteImport } from './routes/api/notes'
 import { Route as NotesIndexRouteImport } from './routes/notes/index'
 import { Route as NotesNoteIdRouteImport } from './routes/notes/$noteId'
 import { Route as NotesNewRouteImport } from './routes/notes/new'
@@ -26,9 +28,19 @@ const AboutRoute = AboutRouteImport.update({
   path: '/about',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const NotesRouteRoute = NotesRouteRouteImport.update({
   id: '/notes',
   path: '/notes',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiNotesRoute = ApiNotesRouteImport.update({
+  id: '/api/notes',
+  path: '/api/notes',
   getParentRoute: () => rootRouteImport,
 } as any)
 const NotesIndexRoute = NotesIndexRouteImport.update({
@@ -51,6 +63,8 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/notes': typeof NotesRouteRouteWithChildren
   '/about': typeof AboutRoute
+  '/login': typeof LoginRoute
+  '/api/notes': typeof ApiNotesRoute
   '/notes/$noteId': typeof NotesNoteIdRoute
   '/notes/new': typeof NotesNewRoute
   '/notes/': typeof NotesIndexRoute
@@ -58,6 +72,8 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/login': typeof LoginRoute
+  '/api/notes': typeof ApiNotesRoute
   '/notes/$noteId': typeof NotesNoteIdRoute
   '/notes/new': typeof NotesNewRoute
   '/notes': typeof NotesIndexRoute
@@ -67,6 +83,8 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/notes': typeof NotesRouteRouteWithChildren
   '/about': typeof AboutRoute
+  '/login': typeof LoginRoute
+  '/api/notes': typeof ApiNotesRoute
   '/notes/$noteId': typeof NotesNoteIdRoute
   '/notes/new': typeof NotesNewRoute
   '/notes/': typeof NotesIndexRoute
@@ -74,14 +92,30 @@ export interface FileRoutesById {
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    '/' | '/notes' | '/about' | '/notes/$noteId' | '/notes/new' | '/notes/'
+    | '/'
+    | '/notes'
+    | '/about'
+    | '/login'
+    | '/api/notes'
+    | '/notes/$noteId'
+    | '/notes/new'
+    | '/notes/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/about' | '/notes/$noteId' | '/notes/new' | '/notes'
+  to:
+    | '/'
+    | '/about'
+    | '/login'
+    | '/api/notes'
+    | '/notes/$noteId'
+    | '/notes/new'
+    | '/notes'
   id:
     | '__root__'
     | '/'
     | '/notes'
     | '/about'
+    | '/login'
+    | '/api/notes'
     | '/notes/$noteId'
     | '/notes/new'
     | '/notes/'
@@ -91,6 +125,8 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   NotesRouteRoute: typeof NotesRouteRouteWithChildren
   AboutRoute: typeof AboutRoute
+  LoginRoute: typeof LoginRoute
+  ApiNotesRoute: typeof ApiNotesRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -109,11 +145,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AboutRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/notes': {
       id: '/notes'
       path: '/notes'
       fullPath: '/notes'
       preLoaderRoute: typeof NotesRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/notes': {
+      id: '/api/notes'
+      path: '/api/notes'
+      fullPath: '/api/notes'
+      preLoaderRoute: typeof ApiNotesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/notes/': {
@@ -160,6 +210,8 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   NotesRouteRoute: NotesRouteRouteWithChildren,
   AboutRoute: AboutRoute,
+  LoginRoute: LoginRoute,
+  ApiNotesRoute: ApiNotesRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

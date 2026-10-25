@@ -1,38 +1,23 @@
 import { createServerFn } from '@tanstack/react-start'
-import { readFile, writeFile } from 'node:fs/promises'
-
-type Note = { id: string; title: string; body: string }
-
-const FILE = 'data/notes.json'
-
-async function readNotes() {
-  const text = await readFile(FILE, 'utf-8')
-  return JSON.parse(text) as Array<Note>
-}
-
-async function saveNotes(notes: Array<Note>) {
-  await writeFile(FILE, JSON.stringify(notes, null, 2))
-}
+import { authMiddleware } from './auth.functions'
+import { readNotes, saveNotes } from './notes.server'
 
 // ---------- READ ----------
 
 // Get all notes
-export const getNotes = createServerFn().handler(async () => {
-  console.log('📂 getNotes running on the SERVER')
-  return readNotes()
-})
+export const getNotes = createServerFn()
+  .middleware([authMiddleware]) // 🔐 must be logged in
+  .handler(async () => {
+    console.log('📂 getNotes running on the SERVER')
+    return readNotes()
+  })
 
 // Get one note by id
 export const getNote = createServerFn()
+  .middleware([authMiddleware]) // 🔐 must be logged in
   .validator((data: { id: string }) => data)
   .handler(async ({ data }) => {
     console.log(`📂 getNote(${data.id}) running on the SERVER`)
-
-    // 🧪 LESSON 6 TEST ONLY: wait 2 seconds so you can SEE the loading screen
-    await new Promise((resolve) => setTimeout(resolve, 2000))
-
-    // 🧪 LESSON 6 TEST ONLY: open /notes/crash to SEE the error screen
-    if (data.id === 'crash') throw new Error('Oops! The server broke 💥')
 
     const notes = await readNotes()
     return notes.find((n) => n.id === data.id) ?? null
@@ -42,6 +27,7 @@ export const getNote = createServerFn()
 
 // Create a note
 export const createNote = createServerFn({ method: 'POST' })
+  .middleware([authMiddleware]) // 🔐 must be logged in
   .validator((data: { title: string; body: string }) => {
     const title = data.title.trim()
     if (!title) throw new Error('Title is required')
@@ -57,6 +43,7 @@ export const createNote = createServerFn({ method: 'POST' })
 
 // Delete a note
 export const deleteNote = createServerFn({ method: 'POST' })
+  .middleware([authMiddleware]) // 🔐 must be logged in
   .validator((data: { id: string }) => data)
   .handler(async ({ data }) => {
     console.log(`🗑️ deleteNote(${data.id}) running on the SERVER`)
