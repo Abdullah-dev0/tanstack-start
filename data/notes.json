@@ -1,33 +1,13 @@
 [
   {
-    "id": "1761350401000",
-    "title": "Meeting note #1",
-    "body": "Sync with design on the onboarding flow."
-  },
-  {
-    "id": "1761350403000",
-    "title": "Workout note #1",
-    "body": "5k run, then 15 minutes of stretching."
-  },
-  {
     "id": "1761350404000",
     "title": "Recipe note #1",
     "body": "Bake sourdough: 70% hydration, overnight proof."
   },
   {
-    "id": "1761350405000",
-    "title": "Travel note #1",
-    "body": "List museums to visit on day two."
-  },
-  {
     "id": "1761350406000",
     "title": "Idea note #1",
     "body": "A tiny app to track house plant watering."
-  },
-  {
-    "id": "1761350407000",
-    "title": "Bug note #1",
-    "body": "Dark mode flashes on first load."
   },
   {
     "id": "1761350408000",
@@ -53,11 +33,6 @@
     "id": "1761350412000",
     "title": "Podcast note #1",
     "body": "Episode on system design trade-offs."
-  },
-  {
-    "id": "1761350413000",
-    "title": "Gift note #1",
-    "body": "Anniversary: book a dinner reservation."
   },
   {
     "id": "1761350414000",

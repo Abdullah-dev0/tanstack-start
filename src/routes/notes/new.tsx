@@ -31,8 +31,11 @@ function NewNote() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-3">
-      <h2 className="m-0 text-xl font-semibold text-(--sea-ink)">
+    <form
+      onSubmit={handleSubmit}
+      className="mx-auto max-w-2xl animate-rise rounded-3xl border border-zinc-900/5 bg-white p-8 shadow-sm shadow-zinc-900/5 transition focus-within:border-zinc-900/10 focus-within:shadow-lg sm:p-12 dark:border-white/10 dark:bg-zinc-900/50 dark:focus-within:border-white/20"
+    >
+      <h2 className="font-mono text-xs text-zinc-400 dark:text-zinc-500">
         Create a note
       </h2>
 
@@ -40,24 +43,30 @@ function NewNote() {
         value={title}
         onChange={(e) => setTitle(e.target.value)}
         placeholder="Title"
-        className="w-full rounded-xl border border-(--line) bg-transparent px-4 py-2 text-(--sea-ink)"
+        className="mt-4 w-full bg-transparent text-3xl font-semibold tracking-tighter outline-none placeholder:text-zinc-300 sm:text-4xl dark:placeholder:text-zinc-700"
       />
       <textarea
         value={body}
         onChange={(e) => setBody(e.target.value)}
         placeholder="Write something..."
         rows={4}
-        className="w-full rounded-xl border border-(--line) bg-transparent px-4 py-2 text-(--sea-ink)"
+        className="mt-6 min-h-40 w-full resize-none bg-transparent text-lg leading-relaxed text-zinc-600 outline-none placeholder:text-zinc-300 dark:text-zinc-300 dark:placeholder:text-zinc-700"
       />
 
-      {error && <p className="m-0 text-sm text-red-600">{error}</p>}
+      {error && (
+        <p className="mt-4 rounded-xl bg-red-50 px-4 py-2.5 text-sm text-red-600 dark:bg-red-500/10 dark:text-red-400">
+          {error}
+        </p>
+      )}
 
-      <button
-        type="submit"
-        className="rounded-full border border-[rgba(50,143,151,0.3)] bg-[rgba(79,184,178,0.14)] px-5 py-2.5 text-sm font-semibold text-(--lagoon-deep)"
-      >
-        Save note
-      </button>
+      <div className="mt-8 flex justify-end border-t border-zinc-900/5 pt-6 dark:border-white/10">
+        <button
+          type="submit"
+          className="rounded-full bg-zinc-900 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-zinc-700 active:scale-95 dark:bg-white dark:text-zinc-900 dark:hover:bg-zinc-200"
+        >
+          Save note
+        </button>
+      </div>
     </form>
   )
 }

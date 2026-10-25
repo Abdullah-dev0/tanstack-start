@@ -2,39 +2,47 @@ import { Link, createFileRoute } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/')({ component: App })
 
+const code =
+  'rounded-md border border-zinc-900/10 bg-zinc-50 px-1.5 py-0.5 font-mono text-[0.85em] text-zinc-700 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-300'
+
 function App() {
   return (
-    <main className="page-wrap px-4 pb-8 pt-14">
-      <section className="island-shell rise-in relative overflow-hidden rounded-4xl px-6 py-10 sm:px-10 sm:py-14">
-        <div className="pointer-events-none absolute -left-20 -top-24 h-56 w-56 rounded-full bg-[radial-gradient(circle,rgba(79,184,178,0.32),transparent_66%)]" />
-        <div className="pointer-events-none absolute -bottom-20 -right-20 h-56 w-56 rounded-full bg-[radial-gradient(circle,rgba(47,106,74,0.18),transparent_66%)]" />
-        <p className="island-kicker mb-3">TanStack Start Base Template</p>
-        <h1 className="display-title mb-5 max-w-3xl text-4xl leading-[1.02] font-bold tracking-tight text-(--sea-ink) sm:text-6xl">
-          Start simple, ship quickly.
+    <main className="mx-auto max-w-5xl px-6">
+      <section className="animate-rise pt-20 pb-24 sm:pt-28">
+        <p className="inline-flex items-center gap-2 rounded-full border border-zinc-900/10 py-1 pr-3 pl-1.5 text-xs font-medium text-zinc-600 dark:border-white/10 dark:text-zinc-300">
+          <span className="size-2 rounded-full bg-amber-400" />
+          TanStack Start Base Template
+        </p>
+        <h1 className="mt-6 max-w-3xl text-5xl font-semibold tracking-tighter text-balance sm:text-7xl">
+          Start simple,{' '}
+          <span className="bg-[linear-gradient(transparent_58%,var(--color-amber-300)_58%)] dark:bg-[linear-gradient(transparent_58%,color-mix(in_oklab,var(--color-amber-500)_45%,transparent)_58%)]">
+            ship quickly.
+          </span>
         </h1>
-        <p className="mb-8 max-w-2xl text-base text-(--sea-ink-soft) sm:text-lg">
+        <p className="mt-6 max-w-2xl text-lg text-pretty text-zinc-500 dark:text-zinc-400">
           This base starter intentionally keeps things light: two routes, clean
           structure, and the essentials you need to build from scratch.
         </p>
-        <div className="flex flex-wrap gap-3">
+        <div className="mt-10 flex flex-wrap items-center gap-3">
           <Link
             to="/about"
-            className="rounded-full border border-[rgba(50,143,151,0.3)] bg-[rgba(79,184,178,0.14)] px-5 py-2.5 text-sm font-semibold text-(--lagoon-deep) no-underline transition hover:-translate-y-0.5 hover:bg-[rgba(79,184,178,0.24)]"
+            className="group inline-flex items-center gap-2 rounded-full bg-zinc-900 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-zinc-700 dark:bg-white dark:text-zinc-900 dark:hover:bg-zinc-200"
           >
             About This Starter
+            <span className="transition group-hover:translate-x-0.5">→</span>
           </Link>
           <a
             href="https://tanstack.com/router"
             target="_blank"
             rel="noopener noreferrer"
-            className="rounded-full border border-[rgba(23,58,64,0.2)] bg-white/50 px-5 py-2.5 text-sm font-semibold text-(--sea-ink) no-underline transition hover:-translate-y-0.5 hover:border-[rgba(23,58,64,0.35)]"
+            className="rounded-full px-5 py-2.5 text-sm font-medium text-zinc-600 transition hover:bg-zinc-900/5 hover:text-zinc-900 dark:text-zinc-300 dark:hover:bg-white/10 dark:hover:text-white"
           >
             Router Guide
           </a>
         </div>
       </section>
 
-      <section className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <section className="grid gap-px overflow-hidden rounded-3xl border border-zinc-900/5 bg-zinc-900/5 sm:grid-cols-2 lg:grid-cols-4 dark:border-white/10 dark:bg-white/10">
         {[
           [
             'Type-Safe Routing',
@@ -55,30 +63,34 @@ function App() {
         ].map(([title, desc], index) => (
           <article
             key={title}
-            className="island-shell feature-card rise-in rounded-2xl p-5"
+            className="animate-rise bg-white p-8 transition hover:bg-zinc-50 dark:bg-zinc-950 dark:hover:bg-zinc-900"
             style={{ animationDelay: `${index * 90 + 80}ms` }}
           >
-            <h2 className="mb-2 text-base font-semibold text-(--sea-ink)">
-              {title}
-            </h2>
-            <p className="m-0 text-sm text-(--sea-ink-soft)">{desc}</p>
+            <h2 className="font-semibold tracking-tight">{title}</h2>
+            <p className="mt-2 text-sm text-zinc-500 dark:text-zinc-400">
+              {desc}
+            </p>
           </article>
         ))}
       </section>
 
-      <section className="island-shell mt-8 rounded-2xl p-6">
-        <p className="island-kicker mb-2">Quick Start</p>
-        <ul className="m-0 list-disc space-y-2 pl-5 text-sm text-(--sea-ink-soft)">
+      <section className="mt-6 rounded-3xl border border-zinc-900/5 p-8 dark:border-white/10">
+        <p className="font-mono text-xs text-zinc-400 dark:text-zinc-500">
+          Quick Start
+        </p>
+        <ul className="mt-4 list-disc space-y-2 pl-5 text-sm text-zinc-600 marker:text-zinc-300 dark:text-zinc-400 dark:marker:text-zinc-700">
           <li>
-            Edit <code>src/routes/index.tsx</code> to customize the home page.
+            Edit <code className={code}>src/routes/index.tsx</code> to customize
+            the home page.
           </li>
           <li>
-            Update <code>src/components/Header.tsx</code> and{' '}
-            <code>src/components/Footer.tsx</code> for brand links.
+            Update <code className={code}>src/components/Header.tsx</code> and{' '}
+            <code className={code}>src/components/Footer.tsx</code> for brand
+            links.
           </li>
           <li>
-            Add routes in <code>src/routes</code> and tweak visual tokens in{' '}
-            <code>src/styles.css</code>.
+            Add routes in <code className={code}>src/routes</code> and tweak
+            visual tokens in <code className={code}>src/styles.css</code>.
           </li>
         </ul>
       </section>

@@ -6,22 +6,20 @@ export const Route = createFileRoute('/notes')({
 
 function NotesLayout() {
   return (
-    <main className="page-wrap px-4 py-12">
-      <section className="island-shell rounded-2xl p-6 sm:p-8">
-        <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
-          <h1 className="display-title m-0 text-4xl font-bold text-(--sea-ink)">
-            My Notes
-          </h1>
-          <Link
-            to="/notes/new"
-            className="rounded-full border border-[rgba(50,143,151,0.3)] bg-[rgba(79,184,178,0.14)] px-5 py-2.5 text-sm font-semibold text-(--lagoon-deep) no-underline transition hover:-translate-y-0.5 hover:bg-[rgba(79,184,178,0.24)]"
-          >
-            New note
-          </Link>
-        </div>
+    <main className="mx-auto max-w-5xl px-6 pt-16 sm:pt-20">
+      <div className="mb-10 flex flex-wrap items-end justify-between gap-4">
+        <h1 className="text-4xl font-semibold tracking-tighter sm:text-5xl">
+          My Notes
+        </h1>
+        <Link
+          to="/notes/new"
+          className="rounded-full bg-zinc-900 px-4 py-2 text-sm font-medium text-white transition hover:bg-zinc-700 active:scale-95 dark:bg-white dark:text-zinc-900 dark:hover:bg-zinc-200"
+        >
+          New note
+        </Link>
+      </div>
 
-        <Outlet />
-      </section>
+      <Outlet />
     </main>
   )
 }

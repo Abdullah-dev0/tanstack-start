@@ -1,4 +1,9 @@
-import { HeadContent, Scripts, createRootRoute } from '@tanstack/react-router'
+import {
+  HeadContent,
+  Link,
+  Scripts,
+  createRootRoute,
+} from '@tanstack/react-router'
 import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
 import { TanStackDevtools } from '@tanstack/react-devtools'
 import Footer from '../components/Footer'
@@ -30,7 +35,25 @@ export const Route = createRootRoute({
     ],
   }),
   shellComponent: RootDocument,
+  // 🔍 Shown for any URL that matches no route (e.g. /abc)
+  notFoundComponent: PageNotFound,
 })
+
+function PageNotFound() {
+  return (
+    <main className="mx-auto flex min-h-[60vh] max-w-5xl flex-col items-center justify-center px-6 text-center">
+      <h1 className="text-4xl font-semibold tracking-tight text-balance sm:text-5xl">
+        404 — Page not found
+      </h1>
+      <Link
+        to="/"
+        className="mt-8 rounded-full bg-zinc-900 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-zinc-700 dark:bg-white dark:text-zinc-900 dark:hover:bg-zinc-200"
+      >
+        ← Go home
+      </Link>
+    </main>
+  )
+}
 
 function RootDocument({ children }: { children: React.ReactNode }) {
   return (
@@ -39,10 +62,17 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
         <HeadContent />
       </head>
-      <body className="font-sans antialiased wrap-anywhere selection:bg-[rgba(79,184,178,0.24)]">
-        <Header />
-        {children}
-        <Footer />
+      <body className="min-h-dvh bg-white font-sans text-zinc-900 antialiased wrap-anywhere selection:bg-amber-200 selection:text-zinc-900 dark:bg-zinc-950 dark:text-zinc-100">
+        {/* Soft dotted backdrop, faded out toward the bottom */}
+        <div
+          aria-hidden="true"
+          className="pointer-events-none fixed inset-0 -z-10 bg-[radial-gradient(var(--color-zinc-200)_1px,transparent_1px)] mask-[radial-gradient(ellipse_at_top,black,transparent_70%)] bg-size-[22px_22px] dark:bg-[radial-gradient(var(--color-zinc-800)_1px,transparent_1px)]"
+        />
+        <div className="flex min-h-dvh flex-col">
+          <Header />
+          <div className="flex-1">{children}</div>
+          <Footer />
+        </div>
         <TanStackDevtools
           config={{
             position: 'bottom-right',

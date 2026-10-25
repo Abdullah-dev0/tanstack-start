@@ -27,6 +27,13 @@ export const getNote = createServerFn()
   .validator((data: { id: string }) => data)
   .handler(async ({ data }) => {
     console.log(`📂 getNote(${data.id}) running on the SERVER`)
+
+    // 🧪 LESSON 6 TEST ONLY: wait 2 seconds so you can SEE the loading screen
+    await new Promise((resolve) => setTimeout(resolve, 2000))
+
+    // 🧪 LESSON 6 TEST ONLY: open /notes/crash to SEE the error screen
+    if (data.id === 'crash') throw new Error('Oops! The server broke 💥')
+
     const notes = await readNotes()
     return notes.find((n) => n.id === data.id) ?? null
   })
