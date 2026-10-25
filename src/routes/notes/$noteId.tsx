@@ -1,13 +1,13 @@
 import { Link, createFileRoute } from '@tanstack/react-router'
-import { notes } from './-data'
+import { getNote } from '../../utils/notes.functions'
 
 export const Route = createFileRoute('/notes/$noteId')({
+  loader: ({ params }) => getNote({ data: { id: params.noteId } }),
   component: NoteDetail,
 })
 
 function NoteDetail() {
-  const { noteId } = Route.useParams()
-  const note = notes.find((n) => n.id === noteId)
+  const note = Route.useLoaderData()
 
   if (!note) {
     return <p className="m-0 text-(--sea-ink-soft)">Note not found.</p>

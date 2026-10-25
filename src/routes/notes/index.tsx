@@ -1,16 +1,18 @@
 import { Link, createFileRoute, useNavigate } from '@tanstack/react-router'
-import { notes } from './-data'
+import { getNotes } from '../../utils/notes.functions'
 
 export const Route = createFileRoute('/notes/')({
   // Turns the raw ?q= from the URL into typed state
   validateSearch: (search: Record<string, unknown>): { q?: string } => ({
     q: typeof search.q === 'string' ? search.q : undefined,
   }),
+  loader: () => getNotes(),
   component: NotesIndex,
 })
 
 function NotesIndex() {
   const { q = '' } = Route.useSearch()
+  const notes = Route.useLoaderData()
   const navigate = useNavigate({ from: '/notes/' })
 
   const filtered = notes.filter((n) =>
