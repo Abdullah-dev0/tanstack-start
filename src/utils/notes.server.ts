@@ -2,11 +2,12 @@
 // 🔒 Every query is limited to ONE user — you can never see someone else's note.
 // 📖 Docs pattern: db.orders.findMany({ where: { userId: context.session.userId } })
 import { and, count, desc, eq } from 'drizzle-orm'
-import { db } from '../db/client.server'
+import { getDb } from '../db/client.server'
 import { notes } from '../db/schema'
 
 // SELECT * FROM notes WHERE user_id = ? ORDER BY created_at DESC
 export async function listNotes(userId: string) {
+  const db = await getDb() // 🔌 new client for this request
   return db
     .select()
     .from(notes)
@@ -16,6 +17,7 @@ export async function listNotes(userId: string) {
 
 // SELECT * FROM notes WHERE id = ? AND user_id = ?
 export async function findNote(id: string, userId: string) {
+  const db = await getDb() // 🔌 new client for this request
   const rows = await db
     .select()
     .from(notes)
@@ -28,6 +30,7 @@ export async function insertNote(
   userId: string,
   input: { title: string; body: string },
 ) {
+  const db = await getDb() // 🔌 new client for this request
   const [note] = await db
     .insert(notes)
     .values({ ...input, userId })
@@ -37,11 +40,13 @@ export async function insertNote(
 
 // DELETE FROM notes WHERE id = ? AND user_id = ?
 export async function removeNote(id: string, userId: string) {
+  const db = await getDb() // 🔌 new client for this request
   await db.delete(notes).where(and(eq(notes.id, id), eq(notes.userId, userId)))
 }
 
 // SELECT COUNT(*) FROM notes — a public number, no private data
 export async function countAllNotes() {
+  const db = await getDb() // 🔌 new client for this request
   const [row] = await db.select({ total: count() }).from(notes)
   return row.total
 }

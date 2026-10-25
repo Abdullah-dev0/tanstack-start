@@ -1,5 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { auth } from '../../lib/auth'
+import { getAuth } from '../../lib/auth'
 import { listNotes } from '../../utils/notes.server'
 
 // 🌐 SERVER ROUTE: a real URL → /api/notes
@@ -9,6 +9,7 @@ export const Route = createFileRoute('/api/notes')({
     handlers: {
       GET: async ({ request }) => {
         // 🔐 Protect the data here too — beforeLoad does NOT cover /api/...
+        const auth = await getAuth()
         const session = await auth.api.getSession({ headers: request.headers })
         if (!session) {
           return Response.json({ error: 'Please log in' }, { status: 401 })

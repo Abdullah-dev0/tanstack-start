@@ -19,7 +19,9 @@
     "db:migrate": "drizzle-kit migrate",
     "db:seed": "node --env-file=.env scripts/seed.ts",
     "db:studio": "drizzle-kit studio",
-    "db:claim-notes": "node --env-file=.env scripts/claim-notes.ts"
+    "db:claim-notes": "node --env-file=.env scripts/claim-notes.ts",
+    "deploy": "npm run build && wrangler deploy",
+    "cf-typegen": "wrangler types"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.1.18",
@@ -37,6 +39,7 @@
     "zod": "^4.6.7"
   },
   "devDependencies": {
+    "@cloudflare/vite-plugin": "^1.65.0",
     "@tailwindcss/typography": "^0.5.16",
     "@tanstack/devtools-vite": "0.8.5",
     "@tanstack/eslint-config": "0.4.0",
@@ -51,7 +54,8 @@
     "eslint": "^9.20.0",
     "prettier": "^3.8.1",
     "typescript": "^6.0.2",
-    "vite": "^8.0.0"
+    "vite": "^8.0.0",
+    "wrangler": "^4.152.0"
   },
   "pnpm": {
     "onlyBuiltDependencies": [

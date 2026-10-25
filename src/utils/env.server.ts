@@ -3,7 +3,6 @@ import { z } from 'zod'
 
 // The rules: what our secrets must look like
 const ServerEnv = z.object({
-  DATABASE_URL: z.url('DATABASE_URL must be a valid URL'),
   // 🔐 Better Auth — without a secret it silently uses a placeholder in dev!
   BETTER_AUTH_SECRET: z
     .string()

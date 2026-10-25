@@ -285,11 +285,34 @@ Docs offer **managed** (Clerk, WorkOS) or **DIY** — I first built DIY, then sw
 
 ---
 
+### Lesson 16 (part 1) — Cloudflare Workers setup (from the fresh docs)
+
+| Piece | File | What it does |
+| --- | --- | --- |
+| ☁️ Vite plugin | `vite.config.ts` | `cloudflare({ viteEnvironment: { name: 'ssr' } })` **before** `tanstackStart()` → dev + build run in Cloudflare's runtime |
+| ⚙️ Worker config | `wrangler.jsonc` | `name`, `compatibility_date`, `nodejs_compat`, `main: '@tanstack/react-start/server-entry'`, `observability`, Hyperdrive binding |
+| 🐘 Hyperdrive | `wrangler.jsonc` | fast connection layer Worker → Postgres. Local dev uses `localConnectionString` (Docker) |
+| 🔌 DB client | `src/db/client.server.ts` | `getDb()`: **new `pg` Client per request** from `env.HYPERDRIVE.connectionString` (`import { env } from 'cloudflare:workers'`) |
+| 🔐 Auth | `src/lib/auth.ts` | `getAuth()`: Better Auth created **per request** with that client (⚠️ our own combination of the two docs) |
+| 🏷️ Types | `worker-configuration.d.ts` | `npm run cf-typegen` (`wrangler types`) → TypeScript knows `env.HYPERDRIVE` |
+| 📜 Scripts | `package.json` | `deploy` = build + `wrangler deploy`, `cf-typegen` |
+
+- Workers run on Cloudflare's machines worldwide — they **can't reach Docker on my PC**, so production needs an online Postgres (Neon).
+- Cloudflare docs: create a new DB client **per request**; Hyperdrive does the pooling. A shared pool at the top of a file is wrong on Workers.
+- Env in Workers: `process.env` works with `nodejs_compat` (compat date ≥ 2025-04-01); bindings like `HYPERDRIVE` come from `import { env } from 'cloudflare:workers'`. Local secrets from `.env` (or `.dev.vars`), production secrets stored in Cloudflare.
+- drizzle-kit + scripts still use `DATABASE_URL` directly (not Hyperdrive).
+- Better Auth rejects requests whose Origin ≠ `BETTER_AUTH_URL` (saw "Invalid origin" 403 when testing on another port).
+- Tested ✅ locally in Cloudflare's runtime: health, sign-up, isolation (B sees `[]`), SSR `/notes`, wrong password 401, sign-out 401, no I/O errors.
+
+📖 [TanStack hosting](https://tanstack.com/start/latest/docs/framework/react/guide/hosting) · [Cloudflare TanStack Start guide](https://developers.cloudflare.com/workers/framework-guides/web-apps/tanstack-start/) · [Hyperdrive + Drizzle](https://developers.cloudflare.com/hyperdrive/examples/connect-to-postgres/postgres-drivers-and-libraries/drizzle-orm/) · [Hyperdrive local dev](https://developers.cloudflare.com/hyperdrive/configuration/local-development/) · [Workers env vars](https://developers.cloudflare.com/workers/configuration/environment-variables/)
+
+---
+
 ## ⏳ What I have NOT learned yet — production track 🏭
 
 | # | Lesson | What |
 | --- | --- | --- |
-| 16 | **Deploy + CI** | Host (Vercel / Netlify / Cloudflare / Node), env vars in production, GitHub Actions |
+| 16 | **Deploy (part 2) + CI** | Neon Postgres, `wrangler login`, Hyperdrive, secrets, `npm run deploy`, GitHub Actions |
 | 17 | **SEO & performance polish** | Meta tags, sitemap |
 
 📖 [Environment variables](https://tanstack.com/start/latest/docs/framework/react/guide/environment-variables) · [Databases](https://tanstack.com/start/latest/docs/framework/react/guide/databases) · [Auth overview](https://tanstack.com/start/latest/docs/framework/react/guide/authentication-overview) · [Auth server primitives](https://tanstack.com/start/latest/docs/framework/react/guide/authentication-server-primitives) · [Observability](https://tanstack.com/start/latest/docs/framework/react/guide/observability) · [Error boundaries](https://tanstack.com/start/latest/docs/framework/react/guide/error-boundaries) · [Hosting](https://tanstack.com/start/latest/docs/framework/react/guide/hosting) · [Server entry point](https://tanstack.com/start/latest/docs/framework/react/guide/server-entry-point) · [SEO](https://tanstack.com/start/latest/docs/framework/react/guide/seo)
@@ -322,6 +345,7 @@ Docs offer **managed** (Clerk, WorkOS) or **DIY** — I first built DIY, then sw
 | `src/routes/ssr-lab/*` | SSR Lab: hydration demo + 3 SSR modes |
 | `vite.config.ts` | Prerenders `/about` at build time |
 | `src/start.ts` | Global middleware: CSRF + request logging |
+| `wrangler.jsonc` · `worker-configuration.d.ts` | Cloudflare Worker config · generated binding types |
 | `src/routes/health.ts` | Health check `/health` |
 | `src/utils/notes.functions.ts` | Notes server functions (all protected) |
 | `src/utils/notes.server.ts` | Database queries for notes (server only) |
