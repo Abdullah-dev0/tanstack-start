@@ -1,4 +1,5 @@
 import {
+  Await,
   Link,
   createFileRoute,
   notFound,
@@ -6,19 +7,27 @@ import {
   useRouter,
 } from '@tanstack/react-router'
 import { useServerFn } from '@tanstack/react-start'
-import { deleteNote, getNote } from '../../utils/notes.functions'
+import { deleteNote, getNote, getNoteStats } from '../../utils/notes.functions'
 
 export const Route = createFileRoute('/notes/$noteId')({
   // 1. LOAD the data
   loader: async ({ params }) => {
+    // 🐢 SLOW data: start it, but do NOT await → the page won't wait for it
+    const statsPromise = getNoteStats({ data: { id: params.noteId } })
+
+    // ⚡ FAST data: await it → the page shows as soon as this is ready
     const note = await getNote({ data: { id: params.noteId } })
     if (!note) throw notFound() // no note? → show notFoundComponent
-    return note
+
+    return { note, statsPromise }
   },
+
+  // ⚡ CACHE: for 30 seconds, re-opening this note uses the saved data
+  staleTime: 30_000,
 
   // 2. Browser tab title
   head: ({ loaderData }) => ({
-    meta: [{ title: `${loaderData?.title ?? 'Note'} | My Notes` }],
+    meta: [{ title: `${loaderData?.note.title ?? 'Note'} | My Notes` }],
   }),
 
   // 3. The 4 screens this page can show
@@ -35,7 +44,7 @@ const backLink =
 
 // ✅ Success screen
 function NoteDetail() {
-  const note = Route.useLoaderData()
+  const { note, statsPromise } = Route.useLoaderData()
   const deleteNoteFn = useServerFn(deleteNote)
   const router = useRouter()
   const navigate = useNavigate()
@@ -57,6 +66,22 @@ function NoteDetail() {
       <p className="mt-6 text-lg leading-relaxed text-zinc-600 dark:text-zinc-300">
         {note.body}
       </p>
+
+      {/* 🐢 The slow part: shows "Calculating..." first, then the result */}
+      <Await
+        promise={statsPromise}
+        fallback={
+          <p className="mt-6 animate-pulse text-sm text-zinc-400">
+            🐢 Calculating stats...
+          </p>
+        }
+      >
+        {(stats) => (
+          <p className="mt-6 text-sm text-zinc-500 dark:text-zinc-400">
+            📊 {stats.words} words · ~{stats.readingSeconds}s to read
+          </p>
+        )}
+      </Await>
       <div className="mt-10 flex items-center justify-between gap-4 border-t border-zinc-900/5 pt-6 dark:border-white/10">
         <Link to="/notes" className={backLink}>
           ← Back to notes

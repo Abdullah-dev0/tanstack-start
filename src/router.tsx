@@ -9,7 +9,6 @@ export function getRouter() {
     routeTree,
     scrollRestoration: true,
     defaultPreload: 'intent',
-    defaultPreloadStaleTime: 0,
     defaultNotFoundComponent: () => {
       return (
         <div>
