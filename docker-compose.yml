@@ -1,0 +1,17 @@
+# 🐘 Local Postgres database in Docker.
+# Start:  npm run db:up      Stop:  npm run db:down
+services:
+  db:
+    image: postgres:17
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres # 🧪 local only — never use this in production
+      POSTGRES_DB: notes
+    ports:
+      - '5432:5432' # your computer's 5432 → the container's 5432
+    volumes:
+      - pgdata:/var/lib/postgresql/data # keeps your data when the container stops
+
+volumes:
+  pgdata:

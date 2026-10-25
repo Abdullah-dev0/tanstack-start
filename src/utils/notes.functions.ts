@@ -1,6 +1,6 @@
 import { createServerFn } from '@tanstack/react-start'
 import { authMiddleware } from './auth.functions'
-import { readNotes, saveNotes } from './notes.server'
+import { findNote, insertNote, listNotes, removeNote } from './notes.server'
 import { NoteId, NoteInput } from './schemas'
 
 // ---------- READ ----------
@@ -10,7 +10,7 @@ export const getNotes = createServerFn()
   .middleware([authMiddleware]) // 🔐 must be logged in
   .handler(async () => {
     console.log('📂 getNotes running on the SERVER')
-    return readNotes()
+    return listNotes() // 🐘 from the database
   })
 
 // Get one note by id
@@ -19,9 +19,7 @@ export const getNote = createServerFn()
   .validator(NoteId) // 📋 Zod checks the input
   .handler(async ({ data }) => {
     console.log(`📂 getNote(${data.id}) running on the SERVER`)
-
-    const notes = await readNotes()
-    return notes.find((n) => n.id === data.id) ?? null
+    return findNote(data.id) // 🐘 from the database
   })
 
 // ---------- WRITE ----------
@@ -32,10 +30,7 @@ export const createNote = createServerFn({ method: 'POST' })
   .validator(NoteInput) // 📋 Zod checks the input on the server
   .handler(async ({ data }) => {
     console.log(`✏️ createNote("${data.title}") running on the SERVER`)
-    const notes = await readNotes()
-    const note = { id: Date.now().toString(), ...data }
-    await saveNotes([...notes, note])
-    return note
+    return insertNote(data) // 🐘 the database makes the id
   })
 
 // Delete a note
@@ -44,8 +39,7 @@ export const deleteNote = createServerFn({ method: 'POST' })
   .validator(NoteId) // 📋 Zod checks the input
   .handler(async ({ data }) => {
     console.log(`🗑️ deleteNote(${data.id}) running on the SERVER`)
-    const notes = await readNotes()
-    await saveNotes(notes.filter((n) => n.id !== data.id))
+    await removeNote(data.id) // 🐘 delete from the database
   })
 
 // ---------- SLOW (Lesson 9) ----------
@@ -58,8 +52,7 @@ export const getNoteStats = createServerFn()
     console.log(`🐢 getNoteStats(${data.id}) started — takes 2 seconds`)
     await new Promise((resolve) => setTimeout(resolve, 2000)) // 🐢 the slow part
 
-    const notes = await readNotes()
-    const note = notes.find((n) => n.id === data.id)
+    const note = await findNote(data.id)
     const words = note ? note.body.split(/\s+/).filter(Boolean).length : 0
     return { words, readingSeconds: Math.max(1, Math.round(words / 3)) }
   })

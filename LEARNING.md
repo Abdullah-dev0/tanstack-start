@@ -190,11 +190,12 @@ errorComponent: NoteError,       // 💥 crash — "Try again" = router.invalida
 | # | Lesson | What |
 | --- | --- | --- |
 | 12 | **Real database: Postgres in Docker (local) + Drizzle ORM** | Docker Compose, tables, queries, migrations, replace `notes.json`. Hosted Postgres (e.g. Neon) at deploy time |
-| 13 | **Real authentication** | Users table, hashed passwords, sessions in the DB, rate limiting (and auth libraries like Better Auth) |
-| 14 | **Errors, logging & security** | Global error handling, logging/monitoring, CSRF, security headers |
-| 15 | **Testing** | Unit tests (Vitest), end-to-end tests (Playwright) |
-| 16 | **Deploy + CI** | Host (Vercel / Netlify / Cloudflare / Node), env vars in production, GitHub Actions |
-| 17 | **SEO & performance polish** | Meta tags, sitemap, TanStack Query (optional) |
+| 13 | **Caching** 🗄️ | Router cache recap, HTTP `Cache-Control` & CDNs, server-side caching of slow DB queries, TanStack Query |
+| 14 | **Real authentication** | Users table, hashed passwords, sessions in the DB, rate limiting (and auth libraries like Better Auth) |
+| 15 | **Errors, logging & security** | Global error handling, logging/monitoring, CSRF, security headers |
+| 16 | **Testing** | Unit tests (Vitest), end-to-end tests (Playwright) |
+| 17 | **Deploy + CI** | Host (Vercel / Netlify / Cloudflare / Node), env vars in production, GitHub Actions |
+| 18 | **SEO & performance polish** | Meta tags, sitemap |
 
 📖 [Environment variables](https://tanstack.com/start/latest/docs/framework/react/guide/environment-variables) · [Databases](https://tanstack.com/start/latest/docs/framework/react/guide/databases) · [Auth overview](https://tanstack.com/start/latest/docs/framework/react/guide/authentication-overview) · [Auth server primitives](https://tanstack.com/start/latest/docs/framework/react/guide/authentication-server-primitives) · [Observability](https://tanstack.com/start/latest/docs/framework/react/guide/observability) · [Error boundaries](https://tanstack.com/start/latest/docs/framework/react/guide/error-boundaries) · [Hosting](https://tanstack.com/start/latest/docs/framework/react/guide/hosting) · [Server entry point](https://tanstack.com/start/latest/docs/framework/react/guide/server-entry-point) · [SEO](https://tanstack.com/start/latest/docs/framework/react/guide/seo)
 
@@ -232,8 +233,8 @@ errorComponent: NoteError,       // 💥 crash — "Try again" = router.invalida
 
 ## ⚠️ Learning-only code to replace before production
 
-- Hardcoded password `letmein` in `auth.server.ts` → real users + hashed passwords (Lesson 13)
-- Sessions in server memory (lost on restart) → store in the database (Lesson 13)
+- Hardcoded password `letmein` in `auth.server.ts` → real users + hashed passwords (Lesson 14)
+- Sessions in server memory (lost on restart) → store in the database (Lesson 14)
 - `data/notes.json` → Postgres in Docker (Lesson 12)
 - 2-second fake delay in `getNoteStats` → remove, or replace with a real slow service
 - `BadClock` in `ssr-lab/index.tsx` causes a hydration error **on purpose** → delete the SSR Lab before launch

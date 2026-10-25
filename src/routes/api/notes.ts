@@ -1,6 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { isLoggedIn } from '../../utils/auth.server'
-import { readNotes } from '../../utils/notes.server'
+import { listNotes } from '../../utils/notes.server'
 
 // 🌐 SERVER ROUTE: a real URL → /api/notes
 // No page, no React. It gets a Request and returns a Response.
@@ -13,7 +13,7 @@ export const Route = createFileRoute('/api/notes')({
           return Response.json({ error: 'Please log in' }, { status: 401 })
         }
 
-        const notes = await readNotes()
+        const notes = await listNotes()
         return Response.json(notes)
       },
     },
