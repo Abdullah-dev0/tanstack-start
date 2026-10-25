@@ -289,9 +289,8 @@ Docs offer **managed** (Clerk, WorkOS) or **DIY** — I first built DIY, then sw
 
 | # | Lesson | What |
 | --- | --- | --- |
-| 16 | **Testing** | Unit tests (Vitest), end-to-end tests (Playwright) |
-| 17 | **Deploy + CI** | Host (Vercel / Netlify / Cloudflare / Node), env vars in production, GitHub Actions |
-| 18 | **SEO & performance polish** | Meta tags, sitemap |
+| 16 | **Deploy + CI** | Host (Vercel / Netlify / Cloudflare / Node), env vars in production, GitHub Actions |
+| 17 | **SEO & performance polish** | Meta tags, sitemap |
 
 📖 [Environment variables](https://tanstack.com/start/latest/docs/framework/react/guide/environment-variables) · [Databases](https://tanstack.com/start/latest/docs/framework/react/guide/databases) · [Auth overview](https://tanstack.com/start/latest/docs/framework/react/guide/authentication-overview) · [Auth server primitives](https://tanstack.com/start/latest/docs/framework/react/guide/authentication-server-primitives) · [Observability](https://tanstack.com/start/latest/docs/framework/react/guide/observability) · [Error boundaries](https://tanstack.com/start/latest/docs/framework/react/guide/error-boundaries) · [Hosting](https://tanstack.com/start/latest/docs/framework/react/guide/hosting) · [Server entry point](https://tanstack.com/start/latest/docs/framework/react/guide/server-entry-point) · [SEO](https://tanstack.com/start/latest/docs/framework/react/guide/seo)
 
@@ -302,6 +301,7 @@ Docs offer **managed** (Clerk, WorkOS) or **DIY** — I first built DIY, then sw
 | TanStack Query with the router | [Query integration](https://tanstack.com/router/latest/docs/framework/react/integrations/query) |
 | Router context (pass auth/db clients to loaders) | [Router context](https://tanstack.com/router/latest/docs/framework/react/guide/router-context) |
 | Type safety tricks | [Type safety](https://tanstack.com/router/latest/docs/framework/react/guide/type-safety) |
+| Testing (Vitest, Playwright) — skipped for now | [Setup testing](https://tanstack.com/router/latest/docs/framework/react/how-to/setup-testing) |
 | Code splitting | [Code splitting](https://tanstack.com/router/latest/docs/framework/react/guide/code-splitting) |
 | React Server Components (experimental) | [Server components](https://tanstack.com/start/latest/docs/framework/react/guide/server-components) |
 
