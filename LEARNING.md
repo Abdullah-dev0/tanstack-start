@@ -185,12 +185,63 @@ errorComponent: NoteError,       // 💥 crash — "Try again" = router.invalida
 
 ---
 
+### Lesson 12 — Real database: Postgres in Docker + Drizzle
+
+- **Docker** runs Postgres in a box: `docker-compose.yml` → `npm run db:up` / `db:down`.
+- **Schema** (`src/db/schema.ts`) = the table's columns, like Excel. **Drizzle** turns TypeScript into SQL (`select`, `insert`, `delete`, `where(eq(...))`).
+- **Migrations** (`drizzle/*.sql`): `db:generate` writes the SQL from the schema, `db:migrate` runs it. Same files → same tables for everyone.
+- **Seed** (`scripts/seed.ts`, `db:seed`): copied 85 notes from `notes.json` into the table. **Studio**: `db:studio` to browse the data.
+- Only `notes.server.ts` changed — pages didn't, because all storage code lives in one file.
+- `rows.at(0) ?? null` instead of `const [row] = ...` → TypeScript correctly knows "maybe not found".
+- `DATABASE_URL` lives in `.env` (server only). Reading env at module top works on Node, but not on Cloudflare Workers (check at deploy).
+
+📖 [Databases](https://tanstack.com/start/latest/docs/framework/react/guide/databases) · [Drizzle + Postgres](https://orm.drizzle.team/docs/get-started-postgresql) · [Drizzle migrations](https://orm.drizzle.team/docs/migrations)
+
+---
+
+### Lesson 13 — Caching (from the fresh docs)
+
+**Caching = keep a copy so you don't do slow work again.** Two places, both from the docs:
+
+**1. 🧊 Router cache (in the browser)** — built-in stale-while-revalidate cache for loaders.
+
+| Option (route / router) | Default | Meaning |
+| --- | --- | --- |
+| `staleTime` / `defaultStaleTime` | `0` | How long loaded data counts as fresh. Stale → shown instantly, reloaded in the background |
+| `preloadStaleTime` / `defaultPreloadStaleTime` | 30 s | How long hover-preloaded data stays fresh |
+| `gcTime` / `defaultGcTime` | **5 min** | How long unused data stays in memory |
+| `loaderDeps` | — | Extra cache-key parts (search params the loader uses). Change → always reload |
+| `loader.staleReloadMode` | `'background'` | `'blocking'` = wait for fresh data instead |
+
+- Cache key = the URL path (`/notes/1` ≠ `/notes/2`) + `loaderDeps`.
+- `router.invalidate()` marks everything stale and reloads active routes (`sync: true` to wait).
+- In my app: `staleTime: 30_000` on `$noteId.tsx`.
+
+**2. 🌍 HTTP / CDN cache (ISR)** — the server labels responses with `Cache-Control`.
+
+| Label | Meaning | In my app |
+| --- | --- | --- |
+| `public` | Anyone (browser, CDN) may keep it — **only** if the same for everyone | `/about`, `/api/stats` |
+| `max-age=N` | Fresh for N seconds | |
+| `s-maxage=N` | Like `max-age`, but only for CDNs | `/about` |
+| `stale-while-revalidate=N` | Serve the old copy while fetching a new one, up to N seconds | `/about`, `/api/stats` |
+| `private` (+ `Vary: Cookie, Authorization`) | Only the user's own browser may keep it | |
+| `no-store` | Nobody may keep it (sensitive data) | `/notes/*`, `/api/notes` |
+
+- **Page routes:** route `headers: () => ({ 'Cache-Control': '...' })`.
+- **Server routes:** `Response.json(data, { headers: { 'Cache-Control': '...' } })` (or cache middleware).
+- **Server functions:** `setResponseHeaders(new Headers({ ... }))` from `@tanstack/react-start/server`.
+- ⚠️ `public` on logged-in data = one user's data shown to another. Docs: start with short cache times.
+- Prerender + ISR can be combined (build once, CDN refreshes it).
+
+📖 [Data loading — router cache](https://tanstack.com/router/latest/docs/framework/react/guide/data-loading) · [ISR](https://tanstack.com/start/latest/docs/framework/react/guide/isr) · [Server functions — headers](https://tanstack.com/start/latest/docs/framework/react/guide/server-functions)
+
+---
+
 ## ⏳ What I have NOT learned yet — production track 🏭
 
 | # | Lesson | What |
 | --- | --- | --- |
-| 12 | **Real database: Postgres in Docker (local) + Drizzle ORM** | Docker Compose, tables, queries, migrations, replace `notes.json`. Hosted Postgres (e.g. Neon) at deploy time |
-| 13 | **Caching** 🗄️ | Router cache recap, HTTP `Cache-Control` & CDNs, server-side caching of slow DB queries, TanStack Query |
 | 14 | **Real authentication** | Users table, hashed passwords, sessions in the DB, rate limiting (and auth libraries like Better Auth) |
 | 15 | **Errors, logging & security** | Global error handling, logging/monitoring, CSRF, security headers |
 | 16 | **Testing** | Unit tests (Vitest), end-to-end tests (Playwright) |
@@ -226,15 +277,17 @@ errorComponent: NoteError,       // 💥 crash — "Try again" = router.invalida
 | `src/routes/ssr-lab/*` | SSR Lab: hydration demo + 3 SSR modes |
 | `vite.config.ts` | Prerenders `/about` at build time |
 | `src/utils/notes.functions.ts` | Notes server functions (all protected) |
-| `src/utils/notes.server.ts` | Reads/writes `data/notes.json` (server only) |
+| `src/utils/notes.server.ts` | Database queries for notes (server only) |
+| `src/db/schema.ts` · `src/db/client.server.ts` | Table definition · database connection |
+| `src/routes/api/stats.ts` | Public API with `Cache-Control: public` |
+| `docker-compose.yml` · `drizzle.config.ts` · `drizzle/` | Local Postgres · Drizzle settings · migrations |
 | `src/utils/auth.functions.ts` | `authMiddleware`, login, logout, status |
 | `src/utils/auth.server.ts` | Password, sessions, cookies (server only) |
-| `data/notes.json` | The "database" (for now) |
+| `data/notes.json` | Old notes, only used by the seed script now |
 
 ## ⚠️ Learning-only code to replace before production
 
 - Hardcoded password `letmein` in `auth.server.ts` → real users + hashed passwords (Lesson 14)
 - Sessions in server memory (lost on restart) → store in the database (Lesson 14)
-- `data/notes.json` → Postgres in Docker (Lesson 12)
 - 2-second fake delay in `getNoteStats` → remove, or replace with a real slow service
 - `BadClock` in `ssr-lab/index.tsx` causes a hydration error **on purpose** → delete the SSR Lab before launch

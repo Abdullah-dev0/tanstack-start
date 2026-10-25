@@ -1,6 +1,13 @@
 import { createFileRoute } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/about')({
+  // 🌍 PUBLIC page, same for everyone → a CDN may keep a copy
+  // 📖 https://tanstack.com/start/latest/docs/framework/react/guide/isr
+  headers: () => ({
+    // Cache at CDN for 1 hour, allow stale content for up to 1 day
+    'Cache-Control':
+      'public, max-age=3600, s-maxage=3600, stale-while-revalidate=86400',
+  }),
   component: About,
 })
 

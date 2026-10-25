@@ -9,6 +9,10 @@ import { useServerFn } from '@tanstack/react-start'
 import { getAuthStatus, logout } from '../../utils/auth.functions'
 
 export const Route = createFileRoute('/notes')({
+  // 🔒 PRIVATE pages (logged-in data) → nobody may keep a copy
+  // 📖 https://tanstack.com/start/latest/docs/framework/react/guide/server-functions
+  headers: () => ({ 'Cache-Control': 'no-store' }),
+
   // 🚪 PAGE GUARD: runs before ANY /notes page loads.
   // Not logged in? → send to /login.
   // (This is for a nice UX. The real security is authMiddleware.)

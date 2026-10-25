@@ -15,6 +15,7 @@ import { Route as LoginRouteImport } from './routes/login'
 import { Route as NotesRouteRouteImport } from './routes/notes/route'
 import { Route as SsrLabRouteRouteImport } from './routes/ssr-lab/route'
 import { Route as ApiNotesRouteImport } from './routes/api/notes'
+import { Route as ApiStatsRouteImport } from './routes/api/stats'
 import { Route as NotesIndexRouteImport } from './routes/notes/index'
 import { Route as NotesNoteIdRouteImport } from './routes/notes/$noteId'
 import { Route as NotesNewRouteImport } from './routes/notes/new'
@@ -51,6 +52,11 @@ const SsrLabRouteRoute = SsrLabRouteRouteImport.update({
 const ApiNotesRoute = ApiNotesRouteImport.update({
   id: '/api/notes',
   path: '/api/notes',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiStatsRoute = ApiStatsRouteImport.update({
+  id: '/api/stats',
+  path: '/api/stats',
   getParentRoute: () => rootRouteImport,
 } as any)
 const NotesIndexRoute = NotesIndexRouteImport.update({
@@ -96,6 +102,7 @@ export interface FileRoutesByFullPath {
   '/about': typeof AboutRoute
   '/login': typeof LoginRoute
   '/api/notes': typeof ApiNotesRoute
+  '/api/stats': typeof ApiStatsRoute
   '/notes/$noteId': typeof NotesNoteIdRoute
   '/notes/new': typeof NotesNewRoute
   '/ssr-lab/client': typeof SsrLabClientRoute
@@ -109,6 +116,7 @@ export interface FileRoutesByTo {
   '/about': typeof AboutRoute
   '/login': typeof LoginRoute
   '/api/notes': typeof ApiNotesRoute
+  '/api/stats': typeof ApiStatsRoute
   '/notes/$noteId': typeof NotesNoteIdRoute
   '/notes/new': typeof NotesNewRoute
   '/ssr-lab/client': typeof SsrLabClientRoute
@@ -125,6 +133,7 @@ export interface FileRoutesById {
   '/about': typeof AboutRoute
   '/login': typeof LoginRoute
   '/api/notes': typeof ApiNotesRoute
+  '/api/stats': typeof ApiStatsRoute
   '/notes/$noteId': typeof NotesNoteIdRoute
   '/notes/new': typeof NotesNewRoute
   '/ssr-lab/client': typeof SsrLabClientRoute
@@ -142,6 +151,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/login'
     | '/api/notes'
+    | '/api/stats'
     | '/notes/$noteId'
     | '/notes/new'
     | '/ssr-lab/client'
@@ -155,6 +165,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/login'
     | '/api/notes'
+    | '/api/stats'
     | '/notes/$noteId'
     | '/notes/new'
     | '/ssr-lab/client'
@@ -170,6 +181,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/login'
     | '/api/notes'
+    | '/api/stats'
     | '/notes/$noteId'
     | '/notes/new'
     | '/ssr-lab/client'
@@ -186,6 +198,7 @@ export interface RootRouteChildren {
   AboutRoute: typeof AboutRoute
   LoginRoute: typeof LoginRoute
   ApiNotesRoute: typeof ApiNotesRoute
+  ApiStatsRoute: typeof ApiStatsRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -230,6 +243,13 @@ declare module '@tanstack/react-router' {
       path: '/api/notes'
       fullPath: '/api/notes'
       preLoaderRoute: typeof ApiNotesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/stats': {
+      id: '/api/stats'
+      path: '/api/stats'
+      fullPath: '/api/stats'
+      preLoaderRoute: typeof ApiStatsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/notes/': {
@@ -325,6 +345,7 @@ const rootRouteChildren: RootRouteChildren = {
   AboutRoute: AboutRoute,
   LoginRoute: LoginRoute,
   ApiNotesRoute: ApiNotesRoute,
+  ApiStatsRoute: ApiStatsRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

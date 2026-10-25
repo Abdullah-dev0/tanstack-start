@@ -14,7 +14,11 @@ export const Route = createFileRoute('/api/notes')({
         }
 
         const notes = await listNotes()
-        return Response.json(notes)
+        return Response.json(notes, {
+          // 🔒 PRIVATE data → nobody may keep a copy
+          // 📖 https://tanstack.com/start/latest/docs/framework/react/guide/server-functions
+          headers: { 'Cache-Control': 'no-store' },
+        })
       },
     },
   },
