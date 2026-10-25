@@ -308,12 +308,60 @@ Docs offer **managed** (Clerk, WorkOS) or **DIY** — I first built DIY, then sw
 
 ---
 
+### 🚀 Deploy checklist (Lesson 16 part 2 — do it yourself)
+
+1. **Neon address** → console.neon.tech → Connect → **uncheck "Connection pooling"** (host without `-pooler`) → copy.
+   📖 [Cloudflare + Neon](https://developers.cloudflare.com/hyperdrive/examples/connect-to-postgres/postgres-database-providers/neon/)
+2. **Create the tables in Neon** (PowerShell, replace the placeholder; the env var wins over `.env`):
+   ```powershell
+   $env:DATABASE_URL="postgresql://...neon-direct..."; npm run db:migrate; Remove-Item Env:DATABASE_URL
+   ```
+3. **Create Hyperdrive** → copy the printed `id` into `wrangler.jsonc` (replace the `0000...` placeholder), then `npm run cf-typegen`:
+   ```powershell
+   npx wrangler hyperdrive create my-notes-db --connection-string="postgresql://...neon-direct..."
+   ```
+4. **First deploy** (creates the Worker; prints your URL `https://my-notes.<you>.workers.dev`):
+   ```powershell
+   npm run deploy
+   ```
+5. **Secrets** (each command asks for the value; it redeploys immediately):
+   ```powershell
+   npx wrangler secret put BETTER_AUTH_SECRET   # a NEW random 32+ char value, not your local one
+   npx wrangler secret put BETTER_AUTH_URL      # https://my-notes.<you>.workers.dev
+   ```
+   📖 [Workers secrets](https://developers.cloudflare.com/workers/configuration/secrets/)
+6. Open the URL → `/health` should say `healthy` → `/register`.
+
+---
+
+### Lesson 17 — SEO (from the fresh docs)
+
+| Piece | File | What it does |
+| --- | --- | --- |
+| 🏷️ Default meta | `src/routes/__root.tsx` | title, description, `og:site_name`, `og:type`, `twitter:card` for every page |
+| 🏷️ Page meta | `index.tsx`, `about.tsx` (`head()`) | own title / description / `og:title` — **replaces** the default (no duplicates) |
+| 🧩 Structured data | `index.tsx` (`head().scripts`) | JSON-LD `@type: WebSite` → Google understands what the site is |
+| 🤖 robots.txt | `src/routes/robots[.]txt.ts` | "crawl everything" + where the sitemap is |
+| 🗺️ sitemap.xml | `src/routes/sitemap[.]xml.ts` | list of **public** pages (`/`, `/about`). Private notes are not listed |
+
+- `[.]` in a file name = a real dot in the URL (`robots[.]txt.ts` → `/robots.txt`).
+- Dynamic meta from data: `head: ({ loaderData }) => ({ meta: [{ title: loaderData.post.title }] })` (my `$noteId.tsx` already does this).
+- Open Graph (`og:*`) = how a link looks when shared; Twitter card (`twitter:*`) = same for X.
+- Canonical URL: `links: [{ rel: 'canonical', href: 'https://site.com/page' }]` (needs the real domain).
+- SSR is on by default → crawlers get full HTML. Only use `ssr: false` for pages that don't need SEO.
+- Built-in sitemap option: `tanstackStart({ prerender: { enabled: true, crawlLinks: true }, sitemap: { enabled: true, host: 'https://myapp.com' } })`.
+- ⚠️ My tweak: robots/sitemap use the **request's domain** instead of a hardcoded `https://myapp.com` (the real domain isn't known until deploy).
+- Check with: Google Search Console, Rich Results Test, an Open Graph debugger, DevTools.
+
+📖 [SEO guide](https://tanstack.com/start/latest/docs/framework/react/guide/seo) · [Document head](https://tanstack.com/router/latest/docs/framework/react/guide/document-head-management)
+
+---
+
 ## ⏳ What I have NOT learned yet — production track 🏭
 
 | # | Lesson | What |
 | --- | --- | --- |
 | 16 | **Deploy (part 2) + CI** | Neon Postgres, `wrangler login`, Hyperdrive, secrets, `npm run deploy`, GitHub Actions |
-| 17 | **SEO & performance polish** | Meta tags, sitemap |
 
 📖 [Environment variables](https://tanstack.com/start/latest/docs/framework/react/guide/environment-variables) · [Databases](https://tanstack.com/start/latest/docs/framework/react/guide/databases) · [Auth overview](https://tanstack.com/start/latest/docs/framework/react/guide/authentication-overview) · [Auth server primitives](https://tanstack.com/start/latest/docs/framework/react/guide/authentication-server-primitives) · [Observability](https://tanstack.com/start/latest/docs/framework/react/guide/observability) · [Error boundaries](https://tanstack.com/start/latest/docs/framework/react/guide/error-boundaries) · [Hosting](https://tanstack.com/start/latest/docs/framework/react/guide/hosting) · [Server entry point](https://tanstack.com/start/latest/docs/framework/react/guide/server-entry-point) · [SEO](https://tanstack.com/start/latest/docs/framework/react/guide/seo)
 
@@ -347,6 +395,7 @@ Docs offer **managed** (Clerk, WorkOS) or **DIY** — I first built DIY, then sw
 | `src/start.ts` | Global middleware: CSRF + request logging |
 | `wrangler.jsonc` · `worker-configuration.d.ts` | Cloudflare Worker config · generated binding types |
 | `src/routes/health.ts` | Health check `/health` |
+| `src/routes/robots[.]txt.ts` · `sitemap[.]xml.ts` | SEO: robots.txt + sitemap |
 | `src/utils/notes.functions.ts` | Notes server functions (all protected) |
 | `src/utils/notes.server.ts` | Database queries for notes (server only) |
 | `src/db/schema.ts` · `src/db/client.server.ts` | Table definition · database connection |

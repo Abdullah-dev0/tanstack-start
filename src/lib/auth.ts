@@ -12,7 +12,7 @@ import { serverEnv } from '../utils/env.server'
 // database client must be new for every request (Cloudflare Hyperdrive docs).
 // ⚠️ Neither the Better Auth nor the Cloudflare docs show this exact combination —
 //    it joins the two official patterns (we chose this together).
-export async function   getAuth() {
+export async function getAuth() {
   const env = serverEnv() // 📋 Zod checks the secrets (read per request, like the docs say)
   const db = await getDb()
 

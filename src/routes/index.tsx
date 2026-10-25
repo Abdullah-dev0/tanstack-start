@@ -1,6 +1,38 @@
 import { Link, createFileRoute } from '@tanstack/react-router'
 
-export const Route = createFileRoute('/')({ component: App })
+export const Route = createFileRoute('/')({
+  // 🔎 SEO for the home page
+  // 📖 https://tanstack.com/start/latest/docs/framework/react/guide/seo
+  head: () => ({
+    meta: [
+      { title: 'My Notes — simple, private notes' },
+      {
+        name: 'description',
+        content:
+          'Write, search and organize your notes. Fast, private and free.',
+      },
+      { property: 'og:title', content: 'My Notes — simple, private notes' },
+      {
+        property: 'og:description',
+        content:
+          'Write, search and organize your notes. Fast, private and free.',
+      },
+    ],
+    // 🧩 Structured data (JSON-LD): tells Google "this is a website called My Notes"
+    scripts: [
+      {
+        type: 'application/ld+json',
+        children: JSON.stringify({
+          '@context': 'https://schema.org',
+          '@type': 'WebSite',
+          name: 'My Notes',
+          description: 'A simple, private notes app.',
+        }),
+      },
+    ],
+  }),
+  component: App,
+})
 
 const code =
   'rounded-md border border-zinc-900/10 bg-zinc-50 px-1.5 py-0.5 font-mono text-[0.85em] text-zinc-700 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-300'

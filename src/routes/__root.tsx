@@ -23,9 +23,18 @@ export const Route = createRootRoute({
         name: 'viewport',
         content: 'width=device-width, initial-scale=1',
       },
+      // 🔎 SEO defaults for EVERY page (a page's own head() can override them)
+      // 📖 https://tanstack.com/start/latest/docs/framework/react/guide/seo
+      { title: 'My Notes' },
       {
-        title: 'TanStack Start Starter',
+        name: 'description',
+        content: 'A simple, private notes app built with TanStack Start.',
       },
+      // Open Graph — how links look when shared (WhatsApp, Slack, LinkedIn...)
+      { property: 'og:site_name', content: 'My Notes' },
+      { property: 'og:type', content: 'website' },
+      // Twitter / X card
+      { name: 'twitter:card', content: 'summary' },
     ],
     links: [
       {

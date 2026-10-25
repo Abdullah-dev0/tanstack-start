@@ -15,6 +15,8 @@ import { Route as HealthRouteImport } from './routes/health'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as NotesRouteRouteImport } from './routes/notes/route'
 import { Route as RegisterRouteImport } from './routes/register'
+import { Route as RobotsDottxtRouteImport } from './routes/robots[.]txt'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as SsrLabRouteRouteImport } from './routes/ssr-lab/route'
 import { Route as ApiNotesRouteImport } from './routes/api/notes'
 import { Route as ApiStatsRouteImport } from './routes/api/stats'
@@ -55,6 +57,16 @@ const NotesRouteRoute = NotesRouteRouteImport.update({
 const RegisterRoute = RegisterRouteImport.update({
   id: '/register',
   path: '/register',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RobotsDottxtRoute = RobotsDottxtRouteImport.update({
+  id: '/robots.txt',
+  path: '/robots.txt',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SsrLabRouteRoute = SsrLabRouteRouteImport.update({
@@ -121,6 +133,8 @@ export interface FileRoutesByFullPath {
   '/health': typeof HealthRoute
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
+  '/robots.txt': typeof RobotsDottxtRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/api/notes': typeof ApiNotesRoute
   '/api/stats': typeof ApiStatsRoute
   '/notes/$noteId': typeof NotesNoteIdRoute
@@ -138,6 +152,8 @@ export interface FileRoutesByTo {
   '/health': typeof HealthRoute
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
+  '/robots.txt': typeof RobotsDottxtRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/api/notes': typeof ApiNotesRoute
   '/api/stats': typeof ApiStatsRoute
   '/notes/$noteId': typeof NotesNoteIdRoute
@@ -158,6 +174,8 @@ export interface FileRoutesById {
   '/health': typeof HealthRoute
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
+  '/robots.txt': typeof RobotsDottxtRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/api/notes': typeof ApiNotesRoute
   '/api/stats': typeof ApiStatsRoute
   '/notes/$noteId': typeof NotesNoteIdRoute
@@ -179,6 +197,8 @@ export interface FileRouteTypes {
     | '/health'
     | '/login'
     | '/register'
+    | '/robots.txt'
+    | '/sitemap.xml'
     | '/api/notes'
     | '/api/stats'
     | '/notes/$noteId'
@@ -196,6 +216,8 @@ export interface FileRouteTypes {
     | '/health'
     | '/login'
     | '/register'
+    | '/robots.txt'
+    | '/sitemap.xml'
     | '/api/notes'
     | '/api/stats'
     | '/notes/$noteId'
@@ -215,6 +237,8 @@ export interface FileRouteTypes {
     | '/health'
     | '/login'
     | '/register'
+    | '/robots.txt'
+    | '/sitemap.xml'
     | '/api/notes'
     | '/api/stats'
     | '/notes/$noteId'
@@ -235,6 +259,8 @@ export interface RootRouteChildren {
   HealthRoute: typeof HealthRoute
   LoginRoute: typeof LoginRoute
   RegisterRoute: typeof RegisterRoute
+  RobotsDottxtRoute: typeof RobotsDottxtRoute
+  SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   ApiNotesRoute: typeof ApiNotesRoute
   ApiStatsRoute: typeof ApiStatsRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
@@ -282,6 +308,20 @@ declare module '@tanstack/react-router' {
       path: '/register'
       fullPath: '/register'
       preLoaderRoute: typeof RegisterRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/robots.txt': {
+      id: '/robots.txt'
+      path: '/robots.txt'
+      fullPath: '/robots.txt'
+      preLoaderRoute: typeof RobotsDottxtRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/ssr-lab': {
@@ -406,6 +446,8 @@ const rootRouteChildren: RootRouteChildren = {
   HealthRoute: HealthRoute,
   LoginRoute: LoginRoute,
   RegisterRoute: RegisterRoute,
+  RobotsDottxtRoute: RobotsDottxtRoute,
+  SitemapDotxmlRoute: SitemapDotxmlRoute,
   ApiNotesRoute: ApiNotesRoute,
   ApiStatsRoute: ApiStatsRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,

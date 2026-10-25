@@ -1,6 +1,17 @@
 import { createFileRoute } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/about')({
+  // 🔎 SEO for the about page
+  head: () => ({
+    meta: [
+      { title: 'About | My Notes' },
+      {
+        name: 'description',
+        content: 'What My Notes is and how it is built with TanStack Start.',
+      },
+      { property: 'og:title', content: 'About | My Notes' },
+    ],
+  }),
   // 🌍 PUBLIC page, same for everyone → a CDN may keep a copy
   // 📖 https://tanstack.com/start/latest/docs/framework/react/guide/isr
   headers: () => ({
