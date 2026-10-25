@@ -23,5 +23,13 @@ export const auth = betterAuth({
   emailAndPassword: {
     enabled: true,
   },
+  // 🚦 RATE LIMIT: stop password guessing.
+  // 📖 https://www.better-auth.com/docs/concepts/rate-limit
+  // Default: OFF in dev, ON in production (100 requests / 10s, sign-in: 3 / 10s).
+  // We turn it on in dev too, so we can see it work.
+  // ⚠️ Default storage is server memory → for many servers use storage: 'database'.
+  rateLimit: {
+    enabled: true,
+  },
   plugins: [tanstackStartCookies()], // make sure this is the last plugin in the array
 })

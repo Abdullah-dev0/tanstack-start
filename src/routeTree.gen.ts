@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AboutRouteImport } from './routes/about'
+import { Route as HealthRouteImport } from './routes/health'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as NotesRouteRouteImport } from './routes/notes/route'
 import { Route as RegisterRouteImport } from './routes/register'
@@ -34,6 +35,11 @@ const IndexRoute = IndexRouteImport.update({
 const AboutRoute = AboutRouteImport.update({
   id: '/about',
   path: '/about',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HealthRoute = HealthRouteImport.update({
+  id: '/health',
+  path: '/health',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LoginRoute = LoginRouteImport.update({
@@ -112,6 +118,7 @@ export interface FileRoutesByFullPath {
   '/notes': typeof NotesRouteRouteWithChildren
   '/ssr-lab': typeof SsrLabRouteRouteWithChildren
   '/about': typeof AboutRoute
+  '/health': typeof HealthRoute
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
   '/api/notes': typeof ApiNotesRoute
@@ -128,6 +135,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/health': typeof HealthRoute
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
   '/api/notes': typeof ApiNotesRoute
@@ -147,6 +155,7 @@ export interface FileRoutesById {
   '/notes': typeof NotesRouteRouteWithChildren
   '/ssr-lab': typeof SsrLabRouteRouteWithChildren
   '/about': typeof AboutRoute
+  '/health': typeof HealthRoute
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
   '/api/notes': typeof ApiNotesRoute
@@ -167,6 +176,7 @@ export interface FileRouteTypes {
     | '/notes'
     | '/ssr-lab'
     | '/about'
+    | '/health'
     | '/login'
     | '/register'
     | '/api/notes'
@@ -183,6 +193,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/about'
+    | '/health'
     | '/login'
     | '/register'
     | '/api/notes'
@@ -201,6 +212,7 @@ export interface FileRouteTypes {
     | '/notes'
     | '/ssr-lab'
     | '/about'
+    | '/health'
     | '/login'
     | '/register'
     | '/api/notes'
@@ -220,6 +232,7 @@ export interface RootRouteChildren {
   NotesRouteRoute: typeof NotesRouteRouteWithChildren
   SsrLabRouteRoute: typeof SsrLabRouteRouteWithChildren
   AboutRoute: typeof AboutRoute
+  HealthRoute: typeof HealthRoute
   LoginRoute: typeof LoginRoute
   RegisterRoute: typeof RegisterRoute
   ApiNotesRoute: typeof ApiNotesRoute
@@ -241,6 +254,13 @@ declare module '@tanstack/react-router' {
       path: '/about'
       fullPath: '/about'
       preLoaderRoute: typeof AboutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/health': {
+      id: '/health'
+      path: '/health'
+      fullPath: '/health'
+      preLoaderRoute: typeof HealthRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/login': {
@@ -383,6 +403,7 @@ const rootRouteChildren: RootRouteChildren = {
   NotesRouteRoute: NotesRouteRouteWithChildren,
   SsrLabRouteRoute: SsrLabRouteRouteWithChildren,
   AboutRoute: AboutRoute,
+  HealthRoute: HealthRoute,
   LoginRoute: LoginRoute,
   RegisterRoute: RegisterRoute,
   ApiNotesRoute: ApiNotesRoute,

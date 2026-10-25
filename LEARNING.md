@@ -264,11 +264,31 @@ Docs offer **managed** (Clerk, WorkOS) or **DIY** — I first built DIY, then sw
 
 ---
 
+### Lesson 15 — Errors, logging & security (from the fresh docs)
+
+| Part | File | What it does | Docs |
+| --- | --- | --- | --- |
+| 🛡️ **CSRF** | `src/start.ts` | `createCsrfMiddleware({ filter: serverFn })` → server functions called from other websites get **403** | [Middleware](https://tanstack.com/start/latest/docs/framework/react/guide/middleware) |
+| 📝 **Request logging** | `src/start.ts` | logs `method URL - status (ms)` for every request | [Observability](https://tanstack.com/start/latest/docs/framework/react/guide/observability) |
+| 💥 **Default error screen** | `src/router.tsx` | `defaultErrorComponent` → no error ever shows a blank page | [Error boundaries](https://tanstack.com/start/latest/docs/framework/react/guide/error-boundaries) |
+| 🚦 **Rate limiting** | `src/lib/auth.ts` | Better Auth built-in; sign-in: 3 tries / 10s → **429** | [Better Auth rate limit](https://www.better-auth.com/docs/concepts/rate-limit) |
+| ❤️ **Health check** | `src/routes/health.ts` | `/health` → 200 healthy / 503 if DB is down | [Observability](https://tanstack.com/start/latest/docs/framework/react/guide/observability) |
+
+- ⚠️ **No `src/start.ts` → Start adds CSRF protection automatically. Once you create `src/start.ts`, you must add `createCsrfMiddleware` yourself** (a dev warning reminds you).
+- `requestMiddleware` in `src/start.ts` runs for **every** request (pages, server routes, server functions). `functionMiddleware` only for server functions.
+- Better Auth already does: CSRF/origin check on its own routes, `scrypt` password hashing, `httpOnly` + `sameSite: lax` cookies, 7-day sessions.
+- Better Auth rate limit: **off in dev by default, on in production**; memory storage → use `storage: 'database'` with many servers.
+- Logging rules (docs): never log passwords, tokens or personal data; log errors with context on the server, show a friendly message to the user.
+- Error tracking services the docs mention: Sentry (partner), Bugsnag, Rollbar; APM: DataDog, New Relic, Honeycomb.
+- **Security headers (CSP etc.):** not covered by the TanStack docs.
+- Tested ✅: `/health` 200, CSRF 403 from other sites, rate limit `401 401 401 429 429`, log lines printed.
+
+---
+
 ## ⏳ What I have NOT learned yet — production track 🏭
 
 | # | Lesson | What |
 | --- | --- | --- |
-| 15 | **Errors, logging & security** | Global error handling, logging/monitoring, **rate limiting**, **CSRF origin check**, security headers |
 | 16 | **Testing** | Unit tests (Vitest), end-to-end tests (Playwright) |
 | 17 | **Deploy + CI** | Host (Vercel / Netlify / Cloudflare / Node), env vars in production, GitHub Actions |
 | 18 | **SEO & performance polish** | Meta tags, sitemap |
@@ -301,6 +321,8 @@ Docs offer **managed** (Clerk, WorkOS) or **DIY** — I first built DIY, then sw
 | `src/routes/api/notes.ts` | API endpoint `GET /api/notes` |
 | `src/routes/ssr-lab/*` | SSR Lab: hydration demo + 3 SSR modes |
 | `vite.config.ts` | Prerenders `/about` at build time |
+| `src/start.ts` | Global middleware: CSRF + request logging |
+| `src/routes/health.ts` | Health check `/health` |
 | `src/utils/notes.functions.ts` | Notes server functions (all protected) |
 | `src/utils/notes.server.ts` | Database queries for notes (server only) |
 | `src/db/schema.ts` · `src/db/client.server.ts` | Table definition · database connection |
