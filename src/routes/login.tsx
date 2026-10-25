@@ -5,6 +5,7 @@ import {
   useNavigate,
   useRouter,
 } from '@tanstack/react-router'
+import { useQueryClient } from '@tanstack/react-query'
 import { authClient } from '../lib/auth-client'
 
 export const Route = createFileRoute('/login')({
@@ -17,6 +18,7 @@ const input =
 
 function LoginPage() {
   const router = useRouter()
+  const queryClient = useQueryClient()
   const navigate = useNavigate()
 
   const [email, setEmail] = useState('')
@@ -31,6 +33,7 @@ function LoginPage() {
       setError(result.error.message ?? 'Something went wrong')
       return
     }
+    queryClient.clear() // 🧹 new user → start with an empty Query cache
     await router.invalidate() // the user changed → reload data
     await navigate({ to: '/notes' })
   }

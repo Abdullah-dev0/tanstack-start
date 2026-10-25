@@ -5,6 +5,7 @@ import {
   redirect,
   useNavigate,
 } from '@tanstack/react-router'
+import { useQueryClient } from '@tanstack/react-query'
 import { getSession } from '../../lib/auth.functions'
 import { authClient } from '../../lib/auth-client'
 
@@ -27,9 +28,11 @@ export const Route = createFileRoute('/notes')({
 function NotesLayout() {
   const { user } = Route.useRouteContext()
   const navigate = useNavigate()
+  const queryClient = useQueryClient()
 
   async function handleLogout() {
     await authClient.signOut() // 📖 Better Auth: ends the session
+    queryClient.clear() // 🧹 forget this user's cached notes (so the next user can't see them)
     await navigate({ to: '/login' })
   }
 

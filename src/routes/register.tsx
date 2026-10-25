@@ -5,6 +5,7 @@ import {
   useNavigate,
   useRouter,
 } from '@tanstack/react-router'
+import { useQueryClient } from '@tanstack/react-query'
 import { authClient } from '../lib/auth-client'
 import { RegisterInput } from '../utils/schemas'
 
@@ -18,6 +19,7 @@ const input =
 
 function RegisterPage() {
   const router = useRouter()
+  const queryClient = useQueryClient()
   const navigate = useNavigate()
 
   const [name, setName] = useState('')
@@ -41,6 +43,7 @@ function RegisterPage() {
       setError(result.error.message ?? 'Something went wrong')
       return
     }
+    queryClient.clear() // 🧹 new user → start with an empty Query cache
     await router.invalidate()
     await navigate({ to: '/notes' })
   }

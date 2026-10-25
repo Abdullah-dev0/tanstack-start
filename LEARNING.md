@@ -325,6 +325,31 @@ From the TanStack docs: steps 5–6. ⚠️ Steps 1–4 and 7–8 are **general 
 
 ---
 
+### Lesson 18 — TanStack Query (from the fresh docs)
+
+Router cache = each page keeps its own notebook. **Query** = one central cache shared by the whole app, refreshed by **key**.
+
+| Piece | File | What it does |
+| --- | --- | --- |
+| 📦 QueryClient | `src/router.tsx` | `new QueryClient()` **inside** `getRouter()` (one per request on the server → no data leaks), `context: { queryClient }`, `setupRouterSsrQueryIntegration`, `defaultPreloadStaleTime: 0` |
+| 🏷️ Context type | `src/routes/__root.tsx` | `createRootRouteWithContext<{ queryClient: QueryClient }>()` |
+| 📜 Query recipes | `src/utils/notes.queries.ts` | `queryOptions({ queryKey: ['notes'], queryFn })` and `['notes', id]` |
+| 📋 List | `notes/index.tsx` | loader: `context.queryClient.query({ ...notesQuery, staleTime: 'static' })` · component: `useSuspenseQuery(notesQuery)` |
+| 📝 Note | `notes/$noteId.tsx` | same pattern with `noteQuery(id)`; stats still deferred with `<Await>` |
+| ✏️ Create | `notes/new.tsx` | `useMutation` → `isPending` ("Saving…"), `error`; `onSuccess` → `invalidateQueries({ queryKey: ['notes'] })` |
+| 🗑️ Delete | `notes/$noteId.tsx` | **optimistic**: `onMutate` removes it from the list cache instantly (snapshot), `onError` puts it back, `onSettled` refetches |
+| 🧹 Logout / login | `notes/route.tsx`, `login.tsx`, `register.tsx` | `queryClient.clear()` → the next user never sees the previous user's cached notes (⚠️ my reasoning; `clear()` is Query API) |
+
+- **Keys:** `['notes']` and `['notes', id]` — invalidating `['notes']` refreshes **both** (prefix match). Only notes refresh, not the whole app (`router.invalidate()` refreshes everything).
+- `queryClient.query(...)` is the **new** API; `ensureQueryData` / `prefetchQuery` are deprecated (fresh docs + installed types).
+- `useSuspenseQuery` works with SSR + streaming; `useQuery` only runs in the browser after hydration.
+- `staleTime: 'static'` in the loader = "if cached, use it, don't block on a refetch" (the component still refreshes in the background).
+- Tested ✅ (production build, browser): register, create (→ note page), list shows it, delete → list empty + DB row gone, logout, no console errors.
+
+📖 [Router + Query integration](https://tanstack.com/router/latest/docs/framework/react/integrations/query) · [Mutations](https://tanstack.com/query/latest/docs/framework/react/guides/mutations) · [Optimistic updates](https://tanstack.com/query/latest/docs/framework/react/guides/optimistic-updates) · [Router data loading](https://tanstack.com/router/latest/docs/framework/react/guide/data-loading)
+
+---
+
 ## ⏳ What I have NOT learned yet — production track 🏭
 
 | # | Lesson | What |
@@ -337,7 +362,6 @@ From the TanStack docs: steps 5–6. ⚠️ Steps 1–4 and 7–8 are **general 
 
 | Topic | Docs |
 | --- | --- |
-| TanStack Query with the router | [Query integration](https://tanstack.com/router/latest/docs/framework/react/integrations/query) |
 | Router context (pass auth/db clients to loaders) | [Router context](https://tanstack.com/router/latest/docs/framework/react/guide/router-context) |
 | Type safety tricks | [Type safety](https://tanstack.com/router/latest/docs/framework/react/guide/type-safety) |
 | Testing (Vitest, Playwright) — skipped for now | [Setup testing](https://tanstack.com/router/latest/docs/framework/react/how-to/setup-testing) |
@@ -363,6 +387,7 @@ From the TanStack docs: steps 5–6. ⚠️ Steps 1–4 and 7–8 are **general 
 | `src/routes/health.ts` | Health check `/health` |
 | `src/routes/robots[.]txt.ts` · `sitemap[.]xml.ts` | SEO: robots.txt + sitemap |
 | `src/utils/notes.functions.ts` | Notes server functions (all protected) |
+| `src/utils/notes.queries.ts` | TanStack Query recipes (`notesQuery`, `noteQuery`) |
 | `src/utils/notes.server.ts` | Database queries for notes (server only) |
 | `src/db/schema.ts` · `src/db/client.server.ts` | Table definition · database connection |
 | `docker-compose.yml` · `drizzle.config.ts` · `drizzle/` | Local Postgres · Drizzle settings · migrations |

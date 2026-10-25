@@ -1,18 +1,23 @@
+import { useSuspenseQuery } from '@tanstack/react-query'
 import { Link, createFileRoute, useNavigate } from '@tanstack/react-router'
-import { getNotes } from '../../utils/notes.functions'
+import { notesQuery } from '../../utils/notes.queries'
 
 export const Route = createFileRoute('/notes/')({
   // Turns the raw ?q= from the URL into typed state
   validateSearch: (search: Record<string, unknown>): { q?: string } => ({
     q: typeof search.q === 'string' ? search.q : undefined,
   }),
-  loader: () => getNotes(),
+  // 📦 Put the notes in Query's cache before the page shows (docs pattern).
+  // staleTime 'static' = if they're already cached, don't wait for a refetch here.
+  loader: ({ context }) =>
+    context.queryClient.query({ ...notesQuery, staleTime: 'static' }),
   component: NotesIndex,
 })
 
 function NotesIndex() {
   const { q = '' } = Route.useSearch()
-  const notes = Route.useLoaderData()
+  // 📦 Read the notes FROM the Query cache (updates automatically when it changes)
+  const { data: notes } = useSuspenseQuery(notesQuery)
   const navigate = useNavigate({ from: '/notes/' })
 
   const filtered = notes.filter((n) =>

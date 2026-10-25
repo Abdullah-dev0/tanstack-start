@@ -1,7 +1,9 @@
 import { useState } from 'react'
-import { createFileRoute, useNavigate, useRouter } from '@tanstack/react-router'
+import { useMutation } from '@tanstack/react-query'
+import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { useServerFn } from '@tanstack/react-start'
 import { createNote } from '../../utils/notes.functions'
+import { notesQuery } from '../../utils/notes.queries'
 import { NoteInput } from '../../utils/schemas'
 
 export const Route = createFileRoute('/notes/new')({
@@ -10,8 +12,17 @@ export const Route = createFileRoute('/notes/new')({
 
 function NewNote() {
   const createNoteFn = useServerFn(createNote)
-  const router = useRouter()
   const navigate = useNavigate()
+
+  // ✏️ CREATE with useMutation → isPending + error for free
+  // 📖 https://tanstack.com/query/latest/docs/framework/react/guides/mutations
+  const createMutation = useMutation({
+    mutationFn: (input: { title: string; body: string }) =>
+      createNoteFn({ data: input }),
+    // Saved → mark the notes list as old, so it refetches (only 'notes', not everything)
+    onSuccess: (_note, _input, _onMutateResult, context) =>
+      context.client.invalidateQueries({ queryKey: notesQuery.queryKey }),
+  })
 
   const [title, setTitle] = useState('')
   const [body, setBody] = useState('')
@@ -28,15 +39,14 @@ function NewNote() {
       return
     }
 
+    setError('')
     try {
       // 1. Save on the server (the server checks AGAIN — never trust the browser)
-      const note = await createNoteFn({ data: { title, body } })
-      // 2. Tell the router its loader data is old, so the list reloads
-      await router.invalidate({ sync: true })
-      // 3. Go to the new note
+      const note = await createMutation.mutateAsync({ title, body })
+      // 2. Go to the new note
       await navigate({ to: '/notes/$noteId', params: { noteId: note.id } })
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Something went wrong')
+    } catch {
+      // the message is in createMutation.error (shown below)
     }
   }
 
@@ -61,18 +71,19 @@ function NewNote() {
         className="mt-6 min-h-48 w-full resize-none bg-transparent font-serif text-xl leading-relaxed outline-none placeholder:text-(--faint)"
       />
 
-      {error && (
+      {(error || createMutation.error) && (
         <p className="mt-4 rounded-lg bg-(--accent-soft) px-4 py-2.5 text-sm text-(--accent)">
-          {error}
+          {error || createMutation.error?.message}
         </p>
       )}
 
       <div className="mt-8 flex justify-end border-t border-(--line) pt-6">
         <button
           type="submit"
-          className="rounded-lg bg-(--accent) px-5 py-2.5 text-sm font-medium text-(--accent-ink) transition hover:opacity-90 active:scale-95"
+          disabled={createMutation.isPending}
+          className="rounded-lg bg-(--accent) px-5 py-2.5 text-sm font-medium text-(--accent-ink) transition hover:opacity-90 active:scale-95 disabled:opacity-50"
         >
-          Save note
+          {createMutation.isPending ? 'Saving…' : 'Save note'}
         </button>
       </div>
     </form>

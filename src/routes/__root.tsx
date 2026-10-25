@@ -2,8 +2,9 @@ import {
   HeadContent,
   Link,
   Scripts,
-  createRootRoute,
+  createRootRouteWithContext,
 } from '@tanstack/react-router'
+import type { QueryClient } from '@tanstack/react-query'
 import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
 import { TanStackDevtools } from '@tanstack/react-devtools'
 import Footer from '../components/Footer'
@@ -13,40 +14,44 @@ import appCss from '../styles.css?url'
 
 const THEME_INIT_SCRIPT = `(function(){try{var stored=window.localStorage.getItem('theme');var mode=(stored==='light'||stored==='dark'||stored==='auto')?stored:'auto';var prefersDark=window.matchMedia('(prefers-color-scheme: dark)').matches;var resolved=mode==='auto'?(prefersDark?'dark':'light'):mode;var root=document.documentElement;root.classList.remove('light','dark');root.classList.add(resolved);if(mode==='auto'){root.removeAttribute('data-theme')}else{root.setAttribute('data-theme',mode)}root.style.colorScheme=resolved;}catch(e){}})();`
 
-export const Route = createRootRoute({
-  head: () => ({
-    meta: [
-      {
-        charSet: 'utf-8',
-      },
-      {
-        name: 'viewport',
-        content: 'width=device-width, initial-scale=1',
-      },
-      // 🔎 SEO defaults for EVERY page (a page's own head() can override them)
-      // 📖 https://tanstack.com/start/latest/docs/framework/react/guide/seo
-      { title: 'My Notes' },
-      {
-        name: 'description',
-        content: 'A simple, private notes app built with TanStack Start.',
-      },
-      // Open Graph — how links look when shared (WhatsApp, Slack, LinkedIn...)
-      { property: 'og:site_name', content: 'My Notes' },
-      { property: 'og:type', content: 'website' },
-      // Twitter / X card
-      { name: 'twitter:card', content: 'summary' },
-    ],
-    links: [
-      {
-        rel: 'stylesheet',
-        href: appCss,
-      },
-    ],
-  }),
-  shellComponent: RootDocument,
-  // 🔍 Shown for any URL that matches no route (e.g. /abc)
-  notFoundComponent: PageNotFound,
-})
+// 📦 Tells TypeScript: every route's context has a queryClient
+// 📖 https://tanstack.com/router/latest/docs/framework/react/guide/router-context
+export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
+  {
+    head: () => ({
+      meta: [
+        {
+          charSet: 'utf-8',
+        },
+        {
+          name: 'viewport',
+          content: 'width=device-width, initial-scale=1',
+        },
+        // 🔎 SEO defaults for EVERY page (a page's own head() can override them)
+        // 📖 https://tanstack.com/start/latest/docs/framework/react/guide/seo
+        { title: 'My Notes' },
+        {
+          name: 'description',
+          content: 'A simple, private notes app built with TanStack Start.',
+        },
+        // Open Graph — how links look when shared (WhatsApp, Slack, LinkedIn...)
+        { property: 'og:site_name', content: 'My Notes' },
+        { property: 'og:type', content: 'website' },
+        // Twitter / X card
+        { name: 'twitter:card', content: 'summary' },
+      ],
+      links: [
+        {
+          rel: 'stylesheet',
+          href: appCss,
+        },
+      ],
+    }),
+    shellComponent: RootDocument,
+    // 🔍 Shown for any URL that matches no route (e.g. /abc)
+    notFoundComponent: PageNotFound,
+  },
+)
 
 function PageNotFound() {
   return (

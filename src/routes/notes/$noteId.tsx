@@ -1,3 +1,4 @@
+import { useMutation, useSuspenseQuery } from '@tanstack/react-query'
 import {
   Await,
   Link,
@@ -7,23 +8,24 @@ import {
   useRouter,
 } from '@tanstack/react-router'
 import { useServerFn } from '@tanstack/react-start'
-import { deleteNote, getNote, getNoteStats } from '../../utils/notes.functions'
+import { deleteNote, getNoteStats } from '../../utils/notes.functions'
+import { noteQuery, notesQuery } from '../../utils/notes.queries'
 
 export const Route = createFileRoute('/notes/$noteId')({
   // 1. LOAD the data
-  loader: async ({ params }) => {
+  loader: async ({ params, context }) => {
     // 🐢 SLOW data: start it, but do NOT await → the page won't wait for it
     const statsPromise = getNoteStats({ data: { id: params.noteId } })
 
-    // ⚡ FAST data: await it → the page shows as soon as this is ready
-    const note = await getNote({ data: { id: params.noteId } })
+    // 📦 FAST data: put the note in Query's cache (key ['notes', id])
+    const note = await context.queryClient.query({
+      ...noteQuery(params.noteId),
+      staleTime: 'static',
+    })
     if (!note) throw notFound() // no note? → show notFoundComponent
 
     return { note, statsPromise }
   },
-
-  // ⚡ CACHE: for 30 seconds, re-opening this note uses the saved data
-  staleTime: 30_000,
 
   // 2. Browser tab title
   head: ({ loaderData }) => ({
@@ -43,18 +45,44 @@ const backLink = 'text-sm text-(--muted) transition hover:text-(--ink)'
 
 // ✅ Success screen
 function NoteDetail() {
-  const { note, statsPromise } = Route.useLoaderData()
+  const { noteId } = Route.useParams()
+  const { statsPromise } = Route.useLoaderData()
+  // 📦 Read the note FROM the Query cache
+  const { data: note } = useSuspenseQuery(noteQuery(noteId))
   const deleteNoteFn = useServerFn(deleteNote)
-  const router = useRouter()
   const navigate = useNavigate()
 
-  async function handleDelete() {
-    // 1. Delete on the server
-    await deleteNoteFn({ data: { id: note.id } })
-    // 2. Leave this page FIRST (this note no longer exists)
-    await navigate({ to: '/notes' })
-    // 3. Then reload the list so the deleted note disappears
-    await router.invalidate({ sync: true })
+  // 🗑️ DELETE with an OPTIMISTIC update
+  // 📖 https://tanstack.com/query/latest/docs/framework/react/guides/optimistic-updates
+  const deleteMutation = useMutation({
+    mutationFn: (id: string) => deleteNoteFn({ data: { id } }),
+    // Runs BEFORE the server answers → remove the note from the list right away
+    onMutate: async (id, context) => {
+      await context.client.cancelQueries({ queryKey: notesQuery.queryKey })
+      const previousNotes = context.client.getQueryData(notesQuery.queryKey) // 📸 snapshot
+      context.client.setQueryData(notesQuery.queryKey, (old) =>
+        old?.filter((n) => n.id !== id),
+      )
+      return { previousNotes }
+    },
+    // Server failed → put the snapshot back
+    onError: (_err, _id, onMutateResult, context) => {
+      context.client.setQueryData(
+        notesQuery.queryKey,
+        onMutateResult?.previousNotes,
+      )
+    },
+    // Success or failure → refetch the notes from the server to be sure
+    onSettled: (_data, _error, _id, _onMutateResult, context) =>
+      context.client.invalidateQueries({ queryKey: notesQuery.queryKey }),
+  })
+
+  if (!note) return null // deleted while on this page
+
+  function handleDelete() {
+    if (!note) return
+    deleteMutation.mutate(note.id) // starts the optimistic update
+    void navigate({ to: '/notes' }) // go back — the note is already gone from the list
   }
 
   return (
