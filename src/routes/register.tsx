@@ -14,7 +14,7 @@ export const Route = createFileRoute('/register')({
 })
 
 const input =
-  'w-full rounded-xl border border-zinc-900/10 bg-transparent px-4 py-2 dark:border-white/10'
+  'w-full rounded-lg border border-(--line) bg-(--paper) px-3.5 py-2.5 text-sm outline-none transition placeholder:text-(--faint) focus:border-(--accent) focus:ring-4 focus:ring-(--accent-soft)'
 
 function RegisterPage() {
   const router = useRouter()
@@ -46,14 +46,22 @@ function RegisterPage() {
   }
 
   return (
-    <main className="mx-auto max-w-md px-6 pt-16 sm:pt-20">
+    <main className="mx-auto max-w-sm px-6 pt-16 sm:pt-24">
       <form
         onSubmit={handleSubmit}
-        className="space-y-4 rounded-3xl border border-zinc-900/5 bg-white p-8 shadow-sm dark:border-white/10 dark:bg-zinc-900/50"
+        className="animate-rise space-y-3 rounded-xl border border-(--line) bg-(--card) p-8 shadow-sm"
       >
-        <h1 className="text-3xl font-semibold tracking-tighter">
-          Create account
-        </h1>
+        <div className="mb-6 text-center">
+          <span className="mx-auto flex size-9 items-center justify-center rounded-lg bg-(--accent) text-sm font-bold text-(--accent-ink)">
+            N
+          </span>
+          <h1 className="mt-4 font-serif text-3xl font-medium tracking-tight">
+            Create account
+          </h1>
+          <p className="mt-1 text-sm text-(--muted)">
+            Start writing in under a minute.
+          </p>
+        </div>
 
         <input
           value={name}
@@ -76,18 +84,25 @@ function RegisterPage() {
           className={input}
         />
 
-        {error && <p className="text-sm text-red-600">{error}</p>}
+        {error && (
+          <p className="rounded-lg bg-(--accent-soft) px-3.5 py-2.5 text-sm text-(--accent)">
+            {error}
+          </p>
+        )}
 
         <button
           type="submit"
-          className="rounded-full bg-zinc-900 px-4 py-2 text-sm font-medium text-white transition hover:bg-zinc-700 active:scale-95 dark:bg-white dark:text-zinc-900"
+          className="w-full rounded-lg bg-(--accent) px-4 py-2.5 text-sm font-medium text-(--accent-ink) transition hover:opacity-90 active:scale-[0.98]"
         >
           Create account
         </button>
 
-        <p className="text-sm text-zinc-500">
+        <p className="pt-2 text-center text-sm text-(--muted)">
           Have an account?{' '}
-          <Link to="/login" className="underline">
+          <Link
+            to="/login"
+            className="font-medium text-(--accent) hover:underline"
+          >
             Log in
           </Link>
         </p>

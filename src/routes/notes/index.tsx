@@ -25,7 +25,7 @@ function NotesIndex() {
         <svg
           viewBox="0 0 24 24"
           aria-hidden="true"
-          className="pointer-events-none absolute top-1/2 left-4 size-4 -translate-y-1/2 text-zinc-400"
+          className="pointer-events-none absolute top-1/2 left-3.5 size-4 -translate-y-1/2 text-(--faint)"
           fill="none"
           stroke="currentColor"
           strokeWidth={2}
@@ -44,27 +44,40 @@ function NotesIndex() {
             })
           }
           placeholder="Search notes..."
-          className="w-full rounded-2xl border border-zinc-900/10 bg-white py-3.5 pr-4 pl-11 text-base shadow-sm shadow-zinc-900/5 transition outline-none placeholder:text-zinc-400 focus:border-zinc-900/20 focus:ring-4 focus:ring-amber-400/20 dark:border-white/10 dark:bg-zinc-900 dark:focus:border-white/20"
+          className="w-full rounded-lg border border-(--line) bg-(--card) py-2.5 pr-4 pl-10 text-sm transition outline-none placeholder:text-(--faint) focus:border-(--accent) focus:ring-4 focus:ring-(--accent-soft)"
         />
       </div>
 
       {filtered.length === 0 ? (
-        <p className="mt-6 rounded-3xl border border-dashed border-zinc-900/10 px-6 py-20 text-center text-zinc-500 dark:border-white/10 dark:text-zinc-400">
-          No notes yet.
-        </p>
+        <div className="mt-6 rounded-xl border border-dashed border-(--line) px-6 py-20 text-center">
+          <p className="font-serif text-2xl font-medium">
+            {q ? 'Nothing matches that search.' : 'No notes yet.'}
+          </p>
+          <p className="mt-2 text-sm text-(--muted)">
+            {q ? 'Try a different word.' : 'Your first idea is one click away.'}
+          </p>
+        </div>
       ) : (
-        <ul className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        <ul className="mt-6 divide-y divide-(--line) overflow-hidden rounded-xl border border-(--line) bg-(--card)">
           {filtered.map((note) => (
             <li key={note.id}>
               <Link
                 to="/notes/$noteId"
                 params={{ noteId: note.id }}
-                className="group flex h-full items-center justify-between gap-3 rounded-2xl border border-zinc-900/5 bg-white p-5 font-semibold tracking-tight transition hover:-translate-y-0.5 hover:border-zinc-900/10 hover:shadow-lg hover:shadow-zinc-900/5 dark:border-white/10 dark:bg-zinc-900/50 dark:hover:border-white/20 dark:hover:shadow-black/30"
+                className="flex items-start justify-between gap-6 px-5 py-4 transition hover:bg-(--sunken)"
               >
-                {note.title}
-                <span className="-translate-x-1 text-zinc-400 opacity-0 transition group-hover:translate-x-0 group-hover:opacity-100">
-                  →
-                </span>
+                <div className="min-w-0">
+                  <p className="font-semibold tracking-tight">{note.title}</p>
+                  <p className="mt-1 line-clamp-1 text-sm text-(--muted)">
+                    {note.body || 'No content'}
+                  </p>
+                </div>
+                <time className="shrink-0 pt-0.5 text-xs text-(--faint)">
+                  {new Date(note.createdAt).toLocaleDateString(undefined, {
+                    month: 'short',
+                    day: 'numeric',
+                  })}
+                </time>
               </Link>
             </li>
           ))}

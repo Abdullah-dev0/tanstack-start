@@ -38,9 +38,8 @@ export const Route = createFileRoute('/notes/$noteId')({
 })
 
 const card =
-  'mx-auto max-w-2xl animate-rise rounded-3xl border border-zinc-900/5 bg-white p-8 shadow-sm shadow-zinc-900/5 sm:p-12 dark:border-white/10 dark:bg-zinc-900/50'
-const backLink =
-  'text-sm text-zinc-500 transition hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white'
+  'mx-auto max-w-2xl animate-rise rounded-xl border border-(--line) bg-(--card) p-8 shadow-sm sm:p-12'
+const backLink = 'text-sm text-(--muted) transition hover:text-(--ink)'
 
 // ✅ Success screen
 function NoteDetail() {
@@ -60,10 +59,10 @@ function NoteDetail() {
 
   return (
     <article className={card}>
-      <h2 className="text-3xl font-semibold tracking-tighter text-balance sm:text-4xl">
+      <h2 className="font-serif text-4xl font-medium tracking-tight text-balance sm:text-5xl">
         {note.title}
       </h2>
-      <p className="mt-6 text-lg leading-relaxed text-zinc-600 dark:text-zinc-300">
+      <p className="mt-6 font-serif text-xl leading-relaxed whitespace-pre-line text-(--ink)/85">
         {note.body}
       </p>
 
@@ -71,25 +70,25 @@ function NoteDetail() {
       <Await
         promise={statsPromise}
         fallback={
-          <p className="mt-6 animate-pulse text-sm text-zinc-400">
+          <p className="mt-8 animate-pulse text-xs text-(--faint)">
             🐢 Calculating stats...
           </p>
         }
       >
         {(stats) => (
-          <p className="mt-6 text-sm text-zinc-500 dark:text-zinc-400">
+          <p className="mt-8 text-xs text-(--faint)">
             📊 {stats.words} words · ~{stats.readingSeconds}s to read
           </p>
         )}
       </Await>
-      <div className="mt-10 flex items-center justify-between gap-4 border-t border-zinc-900/5 pt-6 dark:border-white/10">
+      <div className="mt-10 flex items-center justify-between gap-4 border-t border-(--line) pt-6">
         <Link to="/notes" className={backLink}>
           ← Back to notes
         </Link>
         <button
           type="button"
           onClick={handleDelete}
-          className="rounded-full px-4 py-2 text-sm font-medium text-red-600 transition hover:bg-red-50 active:scale-95 dark:text-red-400 dark:hover:bg-red-500/10"
+          className="rounded-lg px-3 py-2 text-sm font-medium text-(--accent) transition hover:bg-(--accent-soft) active:scale-95"
         >
           Delete
         </button>
@@ -101,7 +100,7 @@ function NoteDetail() {
 // ⏳ Loading screen
 function NoteLoading() {
   return (
-    <p className="mx-auto max-w-2xl animate-pulse text-zinc-500 dark:text-zinc-400">
+    <p className="mx-auto max-w-2xl animate-pulse text-(--muted)">
       ⏳ Loading note...
     </p>
   )
@@ -112,9 +111,7 @@ function NoteNotFound() {
   const { noteId } = Route.useParams()
   return (
     <div className={card}>
-      <p className="text-lg text-zinc-600 dark:text-zinc-300">
-        🔍 Note "{noteId}" does not exist.
-      </p>
+      <p className="font-serif text-xl">🔍 Note "{noteId}" does not exist.</p>
       <Link to="/notes" className={`${backLink} mt-6 inline-block`}>
         ← Back to notes
       </Link>
@@ -127,13 +124,13 @@ function NoteError({ error }: { error: unknown }) {
   const router = useRouter()
   return (
     <div className={card}>
-      <p className="text-lg text-red-600 dark:text-red-400">
+      <p className="font-serif text-xl text-(--accent)">
         💥 {error instanceof Error ? error.message : 'Something went wrong'}
       </p>
       <button
         type="button"
         onClick={() => router.invalidate()} // re-runs the loader = "try again"
-        className="mt-6 rounded-full bg-zinc-900 px-4 py-2 text-sm font-medium text-white transition hover:bg-zinc-700 active:scale-95 dark:bg-white dark:text-zinc-900 dark:hover:bg-zinc-200"
+        className="mt-6 rounded-lg bg-(--accent) px-4 py-2 text-sm font-medium text-(--accent-ink) transition hover:opacity-90 active:scale-95"
       >
         Try again
       </button>

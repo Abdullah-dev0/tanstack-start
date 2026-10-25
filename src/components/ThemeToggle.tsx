@@ -73,7 +73,7 @@ export default function ThemeToggle() {
       onClick={toggleMode}
       aria-label={label}
       title={label}
-      className="flex size-8 items-center justify-center rounded-full text-zinc-500 transition hover:bg-zinc-900/5 hover:text-zinc-900 active:scale-90 dark:text-zinc-400 dark:hover:bg-white/10 dark:hover:text-white"
+      className="flex size-8 items-center justify-center rounded-md text-(--muted) transition hover:bg-(--sunken) hover:text-(--ink) active:scale-90"
     >
       <svg
         viewBox="0 0 24 24"

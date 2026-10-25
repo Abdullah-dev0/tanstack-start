@@ -3,13 +3,12 @@
 // 📖 authMiddleware pattern: https://tanstack.com/start/latest/docs/framework/react/guide/authentication-server-primitives
 import { createMiddleware, createServerFn } from '@tanstack/react-start'
 import { getRequestHeaders } from '@tanstack/react-start/server'
-import { getAuth } from './auth'
+import { auth } from './auth'
 
 // Who is logged in? → the session (with .user), or null
 export const getSession = createServerFn({ method: 'GET' }).handler(
   async () => {
     const headers = getRequestHeaders()
-    const auth = await getAuth()
     const session = await auth.api.getSession({ headers })
 
     return session
@@ -20,7 +19,6 @@ export const getSession = createServerFn({ method: 'GET' }).handler(
 export const ensureSession = createServerFn({ method: 'GET' }).handler(
   async () => {
     const headers = getRequestHeaders()
-    const auth = await getAuth()
     const session = await auth.api.getSession({ headers })
 
     if (!session) {
@@ -35,7 +33,6 @@ export const ensureSession = createServerFn({ method: 'GET' }).handler(
 // It checks the session and hands the user to the handler as context.user
 export const authMiddleware = createMiddleware({ type: 'function' }).server(
   async ({ next }) => {
-    const auth = await getAuth()
     const session = await auth.api.getSession({ headers: getRequestHeaders() })
     if (!session) throw new Error('Unauthorized')
     return next({ context: { user: session.user } })

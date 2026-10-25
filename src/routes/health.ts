@@ -3,7 +3,7 @@
 // 📖 https://tanstack.com/start/latest/docs/framework/react/guide/observability
 import { createFileRoute } from '@tanstack/react-router'
 import { sql } from 'drizzle-orm'
-import { getDb } from '../db/client.server'
+import { db } from '../db/client.server'
 
 export const Route = createFileRoute('/health')({
   server: {
@@ -30,7 +30,6 @@ export const Route = createFileRoute('/health')({
 
 async function checkDatabase() {
   try {
-    const db = await getDb()
     await db.execute(sql`SELECT 1`)
     return { status: 'connected' }
   } catch {

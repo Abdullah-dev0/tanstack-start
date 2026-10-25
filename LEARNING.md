@@ -285,75 +285,43 @@ Docs offer **managed** (Clerk, WorkOS) or **DIY** — I first built DIY, then sw
 
 ---
 
-### Lesson 16 (part 1) — Cloudflare Workers setup (from the fresh docs)
+### Lesson 16 — Deploy to a VPS (Node + Nitro)
+
+I first set up Cloudflare Workers, then **switched to a VPS** and removed all Cloudflare code.
 
 | Piece | File | What it does |
 | --- | --- | --- |
-| ☁️ Vite plugin | `vite.config.ts` | `cloudflare({ viteEnvironment: { name: 'ssr' } })` **before** `tanstackStart()` → dev + build run in Cloudflare's runtime |
-| ⚙️ Worker config | `wrangler.jsonc` | `name`, `compatibility_date`, `nodejs_compat`, `main: '@tanstack/react-start/server-entry'`, `observability`, Hyperdrive binding |
-| 🐘 Hyperdrive | `wrangler.jsonc` | fast connection layer Worker → Postgres. Local dev uses `localConnectionString` (Docker) |
-| 🔌 DB client | `src/db/client.server.ts` | `getDb()`: **new `pg` Client per request** from `env.HYPERDRIVE.connectionString` (`import { env } from 'cloudflare:workers'`) |
-| 🔐 Auth | `src/lib/auth.ts` | `getAuth()`: Better Auth created **per request** with that client (⚠️ our own combination of the two docs) |
-| 🏷️ Types | `worker-configuration.d.ts` | `npm run cf-typegen` (`wrangler types`) → TypeScript knows `env.HYPERDRIVE` |
-| 📜 Scripts | `package.json` | `deploy` = build + `wrangler deploy`, `cf-typegen` |
+| 🖥️ Nitro | `vite.config.ts` | `nitro()` plugin → `npm run build` makes a Node server in `.output/` |
+| ▶️ Start | `package.json` | `start` = `node --env-file-if-exists=.env .output/server/index.mjs` |
+| 🔌 DB | `src/db/client.server.ts` | **one shared `pg` Pool** for all requests (normal for Node) |
+| 🔐 Auth | `src/lib/auth.ts` | one `auth` instance at the top of the file (Better Auth docs pattern) |
+| 🛠️ Devtools | `vite.config.ts` | `devtools()` must stay (first plugin): it **removes** the devtools panel from production builds — without it the Node server crashed with a Solid.js error |
 
-- Workers run on Cloudflare's machines worldwide — they **can't reach Docker on my PC**, so production needs an online Postgres (Neon).
-- Cloudflare docs: create a new DB client **per request**; Hyperdrive does the pooling. A shared pool at the top of a file is wrong on Workers.
-- Env in Workers: `process.env` works with `nodejs_compat` (compat date ≥ 2025-04-01); bindings like `HYPERDRIVE` come from `import { env } from 'cloudflare:workers'`. Local secrets from `.env` (or `.dev.vars`), production secrets stored in Cloudflare.
-- drizzle-kit + scripts still use `DATABASE_URL` directly (not Hyperdrive).
-- Better Auth rejects requests whose Origin ≠ `BETTER_AUTH_URL` (saw "Invalid origin" 403 when testing on another port).
-- Tested ✅ locally in Cloudflare's runtime: health, sign-up, isolation (B sees `[]`), SSR `/notes`, wrong password 401, sign-out 401, no I/O errors.
+- VPS vs Workers: a VPS is **one long-running server** → shared pool is right. Workers = many short-lived machines → new client per request + Hyperdrive.
+- ⚠️ My tweak: `--env-file-if-exists=.env` (Node feature) so the production server reads `.env`. The docs' `start` is just `node .output/server/index.mjs`.
+- Nitro listens on port 3000 by default; `PORT=4173 npm run start` changes it.
+- Tested ✅ on the built server: health, sign-up, isolation, SSR `/notes`, prerendered `/about`, robots.txt, rate limit 429, sign-out.
 
-📖 [TanStack hosting](https://tanstack.com/start/latest/docs/framework/react/guide/hosting) · [Cloudflare TanStack Start guide](https://developers.cloudflare.com/workers/framework-guides/web-apps/tanstack-start/) · [Hyperdrive + Drizzle](https://developers.cloudflare.com/hyperdrive/examples/connect-to-postgres/postgres-drivers-and-libraries/drizzle-orm/) · [Hyperdrive local dev](https://developers.cloudflare.com/hyperdrive/configuration/local-development/) · [Workers env vars](https://developers.cloudflare.com/workers/configuration/environment-variables/)
+📖 [TanStack hosting (Node / Nitro)](https://tanstack.com/start/latest/docs/framework/react/guide/hosting) · [Devtools in production](https://tanstack.com/devtools/latest/docs/production)
 
 ---
 
-### 🚀 Deploy checklist (Lesson 16 part 2 — do it yourself)
+### 🚀 VPS deploy checklist (do it yourself)
 
-1. **Neon address** → console.neon.tech → Connect → **uncheck "Connection pooling"** (host without `-pooler`) → copy.
-   📖 [Cloudflare + Neon](https://developers.cloudflare.com/hyperdrive/examples/connect-to-postgres/postgres-database-providers/neon/)
-2. **Create the tables in Neon** (PowerShell, replace the placeholder; the env var wins over `.env`):
-   ```powershell
-   $env:DATABASE_URL="postgresql://...neon-direct..."; npm run db:migrate; Remove-Item Env:DATABASE_URL
-   ```
-3. **Create Hyperdrive** → copy the printed `id` into `wrangler.jsonc` (replace the `0000...` placeholder), then `npm run cf-typegen`:
-   ```powershell
-   npx wrangler hyperdrive create my-notes-db --connection-string="postgresql://...neon-direct..."
-   ```
-4. **First deploy** (creates the Worker; prints your URL `https://my-notes.<you>.workers.dev`):
-   ```powershell
-   npm run deploy
-   ```
-5. **Secrets** (each command asks for the value; it redeploys immediately):
-   ```powershell
-   npx wrangler secret put BETTER_AUTH_SECRET   # a NEW random 32+ char value, not your local one
-   npx wrangler secret put BETTER_AUTH_URL      # https://my-notes.<you>.workers.dev
-   ```
-   📖 [Workers secrets](https://developers.cloudflare.com/workers/configuration/secrets/)
-6. Open the URL → `/health` should say `healthy` → `/register`.
+From the TanStack docs: steps 5–6. ⚠️ Steps 1–4 and 7–8 are **general server setup, not from the TanStack docs**.
 
----
-
-### Lesson 17 — SEO (from the fresh docs)
-
-| Piece | File | What it does |
-| --- | --- | --- |
-| 🏷️ Default meta | `src/routes/__root.tsx` | title, description, `og:site_name`, `og:type`, `twitter:card` for every page |
-| 🏷️ Page meta | `index.tsx`, `about.tsx` (`head()`) | own title / description / `og:title` — **replaces** the default (no duplicates) |
-| 🧩 Structured data | `index.tsx` (`head().scripts`) | JSON-LD `@type: WebSite` → Google understands what the site is |
-| 🤖 robots.txt | `src/routes/robots[.]txt.ts` | "crawl everything" + where the sitemap is |
-| 🗺️ sitemap.xml | `src/routes/sitemap[.]xml.ts` | list of **public** pages (`/`, `/about`). Private notes are not listed |
-
-- `[.]` in a file name = a real dot in the URL (`robots[.]txt.ts` → `/robots.txt`).
-- Dynamic meta from data: `head: ({ loaderData }) => ({ meta: [{ title: loaderData.post.title }] })` (my `$noteId.tsx` already does this).
-- Open Graph (`og:*`) = how a link looks when shared; Twitter card (`twitter:*`) = same for X.
-- Canonical URL: `links: [{ rel: 'canonical', href: 'https://site.com/page' }]` (needs the real domain).
-- SSR is on by default → crawlers get full HTML. Only use `ssr: false` for pages that don't need SEO.
-- Built-in sitemap option: `tanstackStart({ prerender: { enabled: true, crawlLinks: true }, sitemap: { enabled: true, host: 'https://myapp.com' } })`.
-- ⚠️ My tweak: robots/sitemap use the **request's domain** instead of a hardcoded `https://myapp.com` (the real domain isn't known until deploy).
-- Check with: Google Search Console, Rich Results Test, an Open Graph debugger, DevTools.
-
-📖 [SEO guide](https://tanstack.com/start/latest/docs/framework/react/guide/seo) · [Document head](https://tanstack.com/router/latest/docs/framework/react/guide/document-head-management)
+1. A Linux VPS with **Node 22+**, **Docker**, and **git**.
+2. `git clone <your repo>` → `cd` into it → `npm ci`
+3. **Postgres:** in `docker-compose.yml` change `POSTGRES_PASSWORD` to a strong password (⚠️ `postgres` is local-only), then `npm run db:up`.
+4. **`.env` on the server** (never commit it):
+   - `DATABASE_URL=postgresql://postgres:<strong-password>@localhost:5432/notes`
+   - `BETTER_AUTH_SECRET=` a **new** random 32+ char value
+   - `BETTER_AUTH_URL=https://your-domain.com`
+   - `VITE_APP_NAME=My Notes` (used at **build** time)
+5. `npm run db:migrate` → `npm run build`
+6. `npm run start` → app on port 3000 → check `http://localhost:3000/health`
+7. **Keep it running** after you log out / reboot: a process manager (e.g. systemd or pm2).
+8. **HTTPS + domain:** a reverse proxy (e.g. Caddy or Nginx) in front of port 3000. Better Auth uses secure cookies when `BETTER_AUTH_URL` is `https`.
 
 ---
 
@@ -361,7 +329,7 @@ Docs offer **managed** (Clerk, WorkOS) or **DIY** — I first built DIY, then sw
 
 | # | Lesson | What |
 | --- | --- | --- |
-| 16 | **Deploy (part 2) + CI** | Neon Postgres, `wrangler login`, Hyperdrive, secrets, `npm run deploy`, GitHub Actions |
+| 16 | **Deploy + CI** | Deploy to your VPS (checklist above), GitHub Actions |
 
 📖 [Environment variables](https://tanstack.com/start/latest/docs/framework/react/guide/environment-variables) · [Databases](https://tanstack.com/start/latest/docs/framework/react/guide/databases) · [Auth overview](https://tanstack.com/start/latest/docs/framework/react/guide/authentication-overview) · [Auth server primitives](https://tanstack.com/start/latest/docs/framework/react/guide/authentication-server-primitives) · [Observability](https://tanstack.com/start/latest/docs/framework/react/guide/observability) · [Error boundaries](https://tanstack.com/start/latest/docs/framework/react/guide/error-boundaries) · [Hosting](https://tanstack.com/start/latest/docs/framework/react/guide/hosting) · [Server entry point](https://tanstack.com/start/latest/docs/framework/react/guide/server-entry-point) · [SEO](https://tanstack.com/start/latest/docs/framework/react/guide/seo)
 
@@ -392,7 +360,6 @@ Docs offer **managed** (Clerk, WorkOS) or **DIY** — I first built DIY, then sw
 | `src/routes/api/notes.ts` | API endpoint `GET /api/notes` |
 | `vite.config.ts` | Prerenders `/about` at build time |
 | `src/start.ts` | Global middleware: CSRF + request logging |
-| `wrangler.jsonc` · `worker-configuration.d.ts` | Cloudflare Worker config · generated binding types |
 | `src/routes/health.ts` | Health check `/health` |
 | `src/routes/robots[.]txt.ts` · `sitemap[.]xml.ts` | SEO: robots.txt + sitemap |
 | `src/utils/notes.functions.ts` | Notes server functions (all protected) |

@@ -34,28 +34,31 @@ function NotesLayout() {
   }
 
   return (
-    <main className="mx-auto max-w-5xl px-6 pt-16 sm:pt-20">
-      <div className="mb-10 flex flex-wrap items-end justify-between gap-4">
+    <main className="mx-auto max-w-5xl px-6 pt-12 sm:pt-16">
+      <div className="mb-8 flex flex-wrap items-end justify-between gap-4 border-b border-(--line) pb-6">
         <div>
-          <h1 className="text-4xl font-semibold tracking-tighter sm:text-5xl">
+          <h1 className="font-serif text-4xl font-medium tracking-tight">
             My Notes
           </h1>
-          <p className="mt-1 text-sm text-zinc-500">👤 {user.email}</p>
+          <p className="mt-1 flex items-center gap-1.5 text-sm text-(--muted)">
+            <span className="size-1.5 rounded-full bg-emerald-500" />
+            {user.email}
+          </p>
         </div>
         <div className="flex items-center gap-2">
-          <Link
-            to="/notes/new"
-            className="rounded-full bg-zinc-900 px-4 py-2 text-sm font-medium text-white transition hover:bg-zinc-700 active:scale-95 dark:bg-white dark:text-zinc-900 dark:hover:bg-zinc-200"
-          >
-            New note
-          </Link>
           <button
             type="button"
             onClick={handleLogout}
-            className="rounded-full px-4 py-2 text-sm font-medium text-zinc-500 transition hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white"
+            className="rounded-lg px-3 py-2 text-sm font-medium text-(--muted) transition hover:bg-(--sunken) hover:text-(--ink)"
           >
             Log out
           </button>
+          <Link
+            to="/notes/new"
+            className="inline-flex items-center gap-1.5 rounded-lg bg-(--accent) px-4 py-2 text-sm font-medium text-(--accent-ink) shadow-sm transition hover:opacity-90 active:scale-95"
+          >
+            <span className="text-base leading-none">+</span> New note
+          </Link>
         </div>
       </div>
 

@@ -1,20 +1,49 @@
-@import url('https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=JetBrains+Mono:wght@400;500&display=swap');
 @import 'tailwindcss';
 @plugin "@tailwindcss/typography";
 
 /* The theme script in __root.tsx puts `dark` on <html> */
 @custom-variant dark (&:where(.dark, .dark *));
 
-@theme {
-  --font-sans: 'Geist', ui-sans-serif, system-ui, sans-serif;
-  --font-mono: 'Geist Mono', ui-monospace, monospace;
+/* 🎨 Design tokens — inspired by Bear: warm paper, soft ink, one red accent.
+   Use them in classes like text-(--ink) or bg-(--paper). */
+:root {
+  --paper: #fbfaf7; /* page background */
+  --card: #ffffff; /* raised surfaces */
+  --sunken: #f3f1ec; /* inputs, hover rows */
+  --ink: #1f1d1a; /* main text */
+  --muted: #7a756c; /* secondary text */
+  --faint: #b5afa4; /* placeholders */
+  --line: #e9e5dd; /* borders */
+  --accent: #d9493c; /* red highlight */
+  --accent-ink: #ffffff; /* text on accent */
+  --accent-soft: #fbe7e4; /* tinted accent background */
+}
 
-  --animate-rise: rise 600ms cubic-bezier(0.16, 1, 0.3, 1) both;
+.dark {
+  --paper: #1b1a18;
+  --card: #232220;
+  --sunken: #2b2a27;
+  --ink: #ece8e1;
+  --muted: #9b958b;
+  --faint: #5f5a53;
+  --line: #34322e;
+  --accent: #f0625a;
+  --accent-ink: #1b1a18;
+  --accent-soft: #3a2422;
+}
+
+@theme {
+  --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  --font-serif: 'Newsreader', ui-serif, Georgia, serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+
+  --animate-rise: rise 500ms cubic-bezier(0.16, 1, 0.3, 1) both;
 
   @keyframes rise {
     from {
       opacity: 0;
-      transform: translateY(10px);
+      transform: translateY(8px);
     }
     to {
       opacity: 1;

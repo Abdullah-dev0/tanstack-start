@@ -51,12 +51,13 @@ export const Route = createRootRoute({
 function PageNotFound() {
   return (
     <main className="mx-auto flex min-h-[60vh] max-w-5xl flex-col items-center justify-center px-6 text-center">
-      <h1 className="text-4xl font-semibold tracking-tight text-balance sm:text-5xl">
-        404 — Page not found
+      <p className="font-mono text-sm text-(--accent)">404</p>
+      <h1 className="mt-3 font-serif text-4xl font-medium tracking-tight text-balance sm:text-5xl">
+        This page wandered off.
       </h1>
       <Link
         to="/"
-        className="mt-8 rounded-full bg-zinc-900 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-zinc-700 dark:bg-white dark:text-zinc-900 dark:hover:bg-zinc-200"
+        className="mt-8 rounded-lg bg-(--accent) px-4 py-2 text-sm font-medium text-(--accent-ink) transition hover:opacity-90"
       >
         ← Go home
       </Link>
@@ -71,12 +72,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
         <HeadContent />
       </head>
-      <body className="min-h-dvh bg-white font-sans text-zinc-900 antialiased wrap-anywhere selection:bg-amber-200 selection:text-zinc-900 dark:bg-zinc-950 dark:text-zinc-100">
-        {/* Soft dotted backdrop, faded out toward the bottom */}
-        <div
-          aria-hidden="true"
-          className="pointer-events-none fixed inset-0 -z-10 bg-[radial-gradient(var(--color-zinc-200)_1px,transparent_1px)] mask-[radial-gradient(ellipse_at_top,black,transparent_70%)] bg-size-[22px_22px] dark:bg-[radial-gradient(var(--color-zinc-800)_1px,transparent_1px)]"
-        />
+      <body className="min-h-dvh bg-(--paper) font-sans text-(--ink) antialiased wrap-anywhere selection:bg-(--accent-soft) selection:text-(--ink)">
         <div className="flex min-h-dvh flex-col">
           <Header />
           <div className="flex-1">{children}</div>

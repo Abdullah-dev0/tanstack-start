@@ -1,17 +1,12 @@
-// 🔌 The database connection (server only) — on Cloudflare Workers.
-// 📖 https://developers.cloudflare.com/hyperdrive/examples/connect-to-postgres/postgres-drivers-and-libraries/drizzle-orm/
-// Cloudflare's rule: create a NEW client for each request.
-// (Hyperdrive keeps the real connection pool, so this is fast.)
-import { env } from 'cloudflare:workers'
+// 🔌 The database connection (server only) — for a normal Node server / VPS.
+// One shared POOL of connections, reused by all requests.
+// 📖 https://www.better-auth.com/docs/installation (drizzle instance passed to Better Auth)
 import { drizzle } from 'drizzle-orm/node-postgres'
-import { Client } from 'pg'
+import pg from 'pg'
+import { serverEnv } from '../utils/env.server'
 
-export async function getDb() {
-  // Local dev → Docker Postgres (localConnectionString in wrangler.jsonc)
-  // Production → your online Postgres, through Hyperdrive
-  const client = new Client({
-    connectionString: env.HYPERDRIVE.connectionString,
-  })
-  await client.connect()
-  return drizzle(client)
-}
+const pool = new pg.Pool({
+  connectionString: serverEnv().DATABASE_URL, // 📋 checked by Zod
+})
+
+export const db = drizzle(pool)
