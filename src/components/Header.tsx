@@ -26,6 +26,9 @@ export default function Header() {
           <Link to="/notes" className={navLink}>
             Notes
           </Link>
+          <Link to="/ssr-lab" className={navLink}>
+            SSR Lab
+          </Link>
           <Link to="/about" className={`${navLink} hidden sm:inline-flex`}>
             About
           </Link>
