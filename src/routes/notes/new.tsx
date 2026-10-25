@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { createFileRoute, useNavigate, useRouter } from '@tanstack/react-router'
 import { useServerFn } from '@tanstack/react-start'
 import { createNote } from '../../utils/notes.functions'
+import { NoteInput } from '../../utils/schemas'
 
 export const Route = createFileRoute('/notes/new')({
   component: NewNote,
@@ -18,8 +19,17 @@ function NewNote() {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
+
+    // 0. Check in the BROWSER first (instant message, no server trip).
+    //    Same rules as the server — written once in schemas.ts
+    const check = NoteInput.safeParse({ title, body })
+    if (!check.success) {
+      setError(check.error.issues[0].message)
+      return
+    }
+
     try {
-      // 1. Save on the server
+      // 1. Save on the server (the server checks AGAIN — never trust the browser)
       const note = await createNoteFn({ data: { title, body } })
       // 2. Tell the router its loader data is old, so the list reloads
       await router.invalidate({ sync: true })

@@ -33,7 +33,8 @@ function LoginPage() {
       >
         <h1 className="text-3xl font-semibold tracking-tighter">Log in</h1>
         <p className="text-sm text-zinc-500 dark:text-zinc-400">
-          🧪 Learning demo — the password is <code>letmein</code>
+          🧪 Learning demo — the password is <code>APP_PASSWORD</code> in your{' '}
+          <code>.env</code> file
         </p>
 
         <input

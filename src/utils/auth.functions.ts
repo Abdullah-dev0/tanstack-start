@@ -1,5 +1,11 @@
 import { createMiddleware, createServerFn } from '@tanstack/react-start'
-import { PASSWORD, endSession, isLoggedIn, startSession } from './auth.server'
+import {
+  checkPassword,
+  endSession,
+  isLoggedIn,
+  startSession,
+} from './auth.server'
+import { LoginInput } from './schemas'
 
 // 🔐 MIDDLEWARE: a guard that runs BEFORE a server function's handler.
 // Attach it to any server function that needs a logged-in user.
@@ -20,9 +26,9 @@ export const getAuthStatus = createServerFn().handler(async () => {
 
 // Log in
 export const login = createServerFn({ method: 'POST' })
-  .validator((data: { password: string }) => data)
+  .validator(LoginInput) // 📋 Zod checks the input
   .handler(async ({ data }) => {
-    if (data.password !== PASSWORD) throw new Error('Wrong password')
+    if (!checkPassword(data.password)) throw new Error('Wrong password')
     startSession()
     console.log('✅ Logged in')
   })

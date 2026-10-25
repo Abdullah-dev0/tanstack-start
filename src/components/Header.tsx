@@ -16,7 +16,8 @@ export default function Header() {
           <span className="relative flex size-5 items-center justify-center rounded-md bg-zinc-900 dark:bg-white">
             <span className="h-2.5 w-1 -rotate-12 rounded-full bg-amber-400" />
           </span>
-          TanStack Start
+          {/* 🌍 PUBLIC env var (VITE_ prefix) — safe to show in the browser */}
+          {import.meta.env.VITE_APP_NAME}
         </Link>
 
         <div className="flex items-center">

@@ -6,9 +6,13 @@ import {
   setCookie,
 } from '@tanstack/react-start/server'
 
-// 🧪 LEARNING ONLY: one hardcoded password, no real users.
-// A real app stores users in a database with hashed passwords.
-export const PASSWORD = 'letmein'
+import { serverEnv } from './env.server'
+
+// 🧪 LEARNING ONLY: one password from .env, no real users.
+// A real app stores users in a database with hashed passwords (Lesson 13).
+export function checkPassword(password: string) {
+  return password === serverEnv().APP_PASSWORD // 🔒 read the secret HERE, per request
+}
 
 // Logged-in sessions, kept in server memory.
 // (They are forgotten when the dev server restarts.)

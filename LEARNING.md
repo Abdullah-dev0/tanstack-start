@@ -172,12 +172,24 @@ errorComponent: NoteError,       // 💥 crash — "Try again" = router.invalida
 
 ---
 
+### Lesson 11 — Env vars, secrets & Zod
+
+- `.env` = locked drawer for secrets (in `.gitignore`, never uploaded). `.env.example` = fake values, uploaded.
+- **No prefix** (`APP_PASSWORD`) = 🖥️ server only · **`VITE_` prefix** (`VITE_APP_NAME`) = 🌍 public, goes to the browser. Never put secrets in `VITE_`.
+- Read secrets **inside** a handler (`serverEnv()` in `env.server.ts`), never at the top of a file. Restart the dev server after changing `.env`.
+- Zod checks the env at startup of each request → clear error if something is missing.
+- Zod schemas in `schemas.ts` = rules written **once**, used in the **browser** (`safeParse` → instant message) and the **server** (`.validator(NoteInput)` → real security). Never trust the browser.
+- Proved by build: secret in 0 browser files, public name in browser files.
+
+📖 [Environment variables](https://tanstack.com/start/latest/docs/framework/react/guide/environment-variables) · [Server functions (validation)](https://tanstack.com/start/latest/docs/framework/react/guide/server-functions) · [Zod](https://zod.dev)
+
+---
+
 ## ⏳ What I have NOT learned yet — production track 🏭
 
 | # | Lesson | What |
 | --- | --- | --- |
-| 11 | **Env vars, secrets & Zod validation** | `.env`, `VITE_` vs server-only, typed env, Zod schemas in `.validator()` |
-| 12 | **Real database: Postgres on Neon + Drizzle ORM** | Tables, queries, migrations, replace `notes.json` |
+| 12 | **Real database: Postgres in Docker (local) + Drizzle ORM** | Docker Compose, tables, queries, migrations, replace `notes.json`. Hosted Postgres (e.g. Neon) at deploy time |
 | 13 | **Real authentication** | Users table, hashed passwords, sessions in the DB, rate limiting (and auth libraries like Better Auth) |
 | 14 | **Errors, logging & security** | Global error handling, logging/monitoring, CSRF, security headers |
 | 15 | **Testing** | Unit tests (Vitest), end-to-end tests (Playwright) |
@@ -222,6 +234,6 @@ errorComponent: NoteError,       // 💥 crash — "Try again" = router.invalida
 
 - Hardcoded password `letmein` in `auth.server.ts` → real users + hashed passwords (Lesson 13)
 - Sessions in server memory (lost on restart) → store in the database (Lesson 13)
-- `data/notes.json` → Postgres (Lesson 12)
+- `data/notes.json` → Postgres in Docker (Lesson 12)
 - 2-second fake delay in `getNoteStats` → remove, or replace with a real slow service
 - `BadClock` in `ssr-lab/index.tsx` causes a hydration error **on purpose** → delete the SSR Lab before launch

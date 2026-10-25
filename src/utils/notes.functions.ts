@@ -1,6 +1,7 @@
 import { createServerFn } from '@tanstack/react-start'
 import { authMiddleware } from './auth.functions'
 import { readNotes, saveNotes } from './notes.server'
+import { NoteId, NoteInput } from './schemas'
 
 // ---------- READ ----------
 
@@ -15,7 +16,7 @@ export const getNotes = createServerFn()
 // Get one note by id
 export const getNote = createServerFn()
   .middleware([authMiddleware]) // 🔐 must be logged in
-  .validator((data: { id: string }) => data)
+  .validator(NoteId) // 📋 Zod checks the input
   .handler(async ({ data }) => {
     console.log(`📂 getNote(${data.id}) running on the SERVER`)
 
@@ -28,11 +29,7 @@ export const getNote = createServerFn()
 // Create a note
 export const createNote = createServerFn({ method: 'POST' })
   .middleware([authMiddleware]) // 🔐 must be logged in
-  .validator((data: { title: string; body: string }) => {
-    const title = data.title.trim()
-    if (!title) throw new Error('Title is required')
-    return { title, body: data.body.trim() }
-  })
+  .validator(NoteInput) // 📋 Zod checks the input on the server
   .handler(async ({ data }) => {
     console.log(`✏️ createNote("${data.title}") running on the SERVER`)
     const notes = await readNotes()
@@ -44,7 +41,7 @@ export const createNote = createServerFn({ method: 'POST' })
 // Delete a note
 export const deleteNote = createServerFn({ method: 'POST' })
   .middleware([authMiddleware]) // 🔐 must be logged in
-  .validator((data: { id: string }) => data)
+  .validator(NoteId) // 📋 Zod checks the input
   .handler(async ({ data }) => {
     console.log(`🗑️ deleteNote(${data.id}) running on the SERVER`)
     const notes = await readNotes()
@@ -56,7 +53,7 @@ export const deleteNote = createServerFn({ method: 'POST' })
 // Note stats — pretend this calls a SLOW outside service (AI, analytics...)
 export const getNoteStats = createServerFn()
   .middleware([authMiddleware]) // 🔐 must be logged in
-  .validator((data: { id: string }) => data)
+  .validator(NoteId) // 📋 Zod checks the input
   .handler(async ({ data }) => {
     console.log(`🐢 getNoteStats(${data.id}) started — takes 2 seconds`)
     await new Promise((resolve) => setTimeout(resolve, 2000)) // 🐢 the slow part
