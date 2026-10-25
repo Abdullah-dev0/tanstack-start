@@ -1,7 +1,7 @@
 // ".server.ts" = server only. The ONE place that talks to the notes table.
 // 🔒 Every query is limited to ONE user — you can never see someone else's note.
 // 📖 Docs pattern: db.orders.findMany({ where: { userId: context.session.userId } })
-import { and, count, desc, eq } from 'drizzle-orm'
+import { and, desc, eq } from 'drizzle-orm'
 import { getDb } from '../db/client.server'
 import { notes } from '../db/schema'
 
@@ -42,11 +42,4 @@ export async function insertNote(
 export async function removeNote(id: string, userId: string) {
   const db = await getDb() // 🔌 new client for this request
   await db.delete(notes).where(and(eq(notes.id, id), eq(notes.userId, userId)))
-}
-
-// SELECT COUNT(*) FROM notes — a public number, no private data
-export async function countAllNotes() {
-  const db = await getDb() // 🔌 new client for this request
-  const [row] = await db.select({ total: count() }).from(notes)
-  return row.total
 }

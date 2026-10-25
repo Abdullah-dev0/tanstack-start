@@ -221,10 +221,10 @@ errorComponent: NoteError,       // 💥 crash — "Try again" = router.invalida
 
 | Label | Meaning | In my app |
 | --- | --- | --- |
-| `public` | Anyone (browser, CDN) may keep it — **only** if the same for everyone | `/about`, `/api/stats` |
+| `public` | Anyone (browser, CDN) may keep it — **only** if the same for everyone | `/about` |
 | `max-age=N` | Fresh for N seconds | |
 | `s-maxage=N` | Like `max-age`, but only for CDNs | `/about` |
-| `stale-while-revalidate=N` | Serve the old copy while fetching a new one, up to N seconds | `/about`, `/api/stats` |
+| `stale-while-revalidate=N` | Serve the old copy while fetching a new one, up to N seconds | `/about` |
 | `private` (+ `Vary: Cookie, Authorization`) | Only the user's own browser may keep it | |
 | `no-store` | Nobody may keep it (sensitive data) | `/notes/*`, `/api/notes` |
 
@@ -390,7 +390,6 @@ Docs offer **managed** (Clerk, WorkOS) or **DIY** — I first built DIY, then sw
 | `src/routes/notes/$noteId.tsx` | One note: 4 screens, deferred stats, cache, delete |
 | `src/routes/login.tsx` | Login page |
 | `src/routes/api/notes.ts` | API endpoint `GET /api/notes` |
-| `src/routes/ssr-lab/*` | SSR Lab: hydration demo + 3 SSR modes |
 | `vite.config.ts` | Prerenders `/about` at build time |
 | `src/start.ts` | Global middleware: CSRF + request logging |
 | `wrangler.jsonc` · `worker-configuration.d.ts` | Cloudflare Worker config · generated binding types |
@@ -399,7 +398,6 @@ Docs offer **managed** (Clerk, WorkOS) or **DIY** — I first built DIY, then sw
 | `src/utils/notes.functions.ts` | Notes server functions (all protected) |
 | `src/utils/notes.server.ts` | Database queries for notes (server only) |
 | `src/db/schema.ts` · `src/db/client.server.ts` | Table definition · database connection |
-| `src/routes/api/stats.ts` | Public API with `Cache-Control: public` |
 | `docker-compose.yml` · `drizzle.config.ts` · `drizzle/` | Local Postgres · Drizzle settings · migrations |
 | `src/routes/register.tsx` | Create-account page (Better Auth `signUp.email`) |
 | `src/lib/auth.ts` · `auth-client.ts` · `auth.functions.ts` | Better Auth server config · browser client · session helpers + middleware |
@@ -407,7 +405,9 @@ Docs offer **managed** (Clerk, WorkOS) or **DIY** — I first built DIY, then sw
 | `src/db/auth-schema.ts` | Better Auth tables (generated) |
 | `data/notes.json` | Old notes, only used by the seed script now |
 
+## 🧹 Cleanup done (2026-10-25)
+
+- Removed: SSR Lab pages + header link, fake 2s delay, teaching `console.log`s, `/api/stats` demo API, 85 ownerless notes.
+
 ## ⚠️ Learning-only code to replace before production
 
-- 2-second fake delay in `getNoteStats` → remove, or replace with a real slow service
-- `BadClock` in `ssr-lab/index.tsx` causes a hydration error **on purpose** → delete the SSR Lab before launch

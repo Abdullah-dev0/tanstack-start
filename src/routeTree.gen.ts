@@ -17,16 +17,10 @@ import { Route as NotesRouteRouteImport } from './routes/notes/route'
 import { Route as RegisterRouteImport } from './routes/register'
 import { Route as RobotsDottxtRouteImport } from './routes/robots[.]txt'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
-import { Route as SsrLabRouteRouteImport } from './routes/ssr-lab/route'
 import { Route as ApiNotesRouteImport } from './routes/api/notes'
-import { Route as ApiStatsRouteImport } from './routes/api/stats'
 import { Route as NotesIndexRouteImport } from './routes/notes/index'
 import { Route as NotesNoteIdRouteImport } from './routes/notes/$noteId'
 import { Route as NotesNewRouteImport } from './routes/notes/new'
-import { Route as SsrLabIndexRouteImport } from './routes/ssr-lab/index'
-import { Route as SsrLabClientRouteImport } from './routes/ssr-lab/client'
-import { Route as SsrLabDataOnlyRouteImport } from './routes/ssr-lab/data-only'
-import { Route as SsrLabFullRouteImport } from './routes/ssr-lab/full'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 
 const IndexRoute = IndexRouteImport.update({
@@ -69,19 +63,9 @@ const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   path: '/sitemap.xml',
   getParentRoute: () => rootRouteImport,
 } as any)
-const SsrLabRouteRoute = SsrLabRouteRouteImport.update({
-  id: '/ssr-lab',
-  path: '/ssr-lab',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const ApiNotesRoute = ApiNotesRouteImport.update({
   id: '/api/notes',
   path: '/api/notes',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiStatsRoute = ApiStatsRouteImport.update({
-  id: '/api/stats',
-  path: '/api/stats',
   getParentRoute: () => rootRouteImport,
 } as any)
 const NotesIndexRoute = NotesIndexRouteImport.update({
@@ -99,26 +83,6 @@ const NotesNewRoute = NotesNewRouteImport.update({
   path: '/new',
   getParentRoute: () => NotesRouteRoute,
 } as any)
-const SsrLabIndexRoute = SsrLabIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => SsrLabRouteRoute,
-} as any)
-const SsrLabClientRoute = SsrLabClientRouteImport.update({
-  id: '/client',
-  path: '/client',
-  getParentRoute: () => SsrLabRouteRoute,
-} as any)
-const SsrLabDataOnlyRoute = SsrLabDataOnlyRouteImport.update({
-  id: '/data-only',
-  path: '/data-only',
-  getParentRoute: () => SsrLabRouteRoute,
-} as any)
-const SsrLabFullRoute = SsrLabFullRouteImport.update({
-  id: '/full',
-  path: '/full',
-  getParentRoute: () => SsrLabRouteRoute,
-} as any)
 const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
   id: '/api/auth/$',
   path: '/api/auth/$',
@@ -128,7 +92,6 @@ const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/notes': typeof NotesRouteRouteWithChildren
-  '/ssr-lab': typeof SsrLabRouteRouteWithChildren
   '/about': typeof AboutRoute
   '/health': typeof HealthRoute
   '/login': typeof LoginRoute
@@ -136,14 +99,9 @@ export interface FileRoutesByFullPath {
   '/robots.txt': typeof RobotsDottxtRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/api/notes': typeof ApiNotesRoute
-  '/api/stats': typeof ApiStatsRoute
   '/notes/$noteId': typeof NotesNoteIdRoute
   '/notes/new': typeof NotesNewRoute
-  '/ssr-lab/client': typeof SsrLabClientRoute
-  '/ssr-lab/data-only': typeof SsrLabDataOnlyRoute
-  '/ssr-lab/full': typeof SsrLabFullRoute
   '/notes/': typeof NotesIndexRoute
-  '/ssr-lab/': typeof SsrLabIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
 }
 export interface FileRoutesByTo {
@@ -155,21 +113,15 @@ export interface FileRoutesByTo {
   '/robots.txt': typeof RobotsDottxtRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/api/notes': typeof ApiNotesRoute
-  '/api/stats': typeof ApiStatsRoute
   '/notes/$noteId': typeof NotesNoteIdRoute
   '/notes/new': typeof NotesNewRoute
-  '/ssr-lab/client': typeof SsrLabClientRoute
-  '/ssr-lab/data-only': typeof SsrLabDataOnlyRoute
-  '/ssr-lab/full': typeof SsrLabFullRoute
   '/notes': typeof NotesIndexRoute
-  '/ssr-lab': typeof SsrLabIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/notes': typeof NotesRouteRouteWithChildren
-  '/ssr-lab': typeof SsrLabRouteRouteWithChildren
   '/about': typeof AboutRoute
   '/health': typeof HealthRoute
   '/login': typeof LoginRoute
@@ -177,14 +129,9 @@ export interface FileRoutesById {
   '/robots.txt': typeof RobotsDottxtRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/api/notes': typeof ApiNotesRoute
-  '/api/stats': typeof ApiStatsRoute
   '/notes/$noteId': typeof NotesNoteIdRoute
   '/notes/new': typeof NotesNewRoute
-  '/ssr-lab/client': typeof SsrLabClientRoute
-  '/ssr-lab/data-only': typeof SsrLabDataOnlyRoute
-  '/ssr-lab/full': typeof SsrLabFullRoute
   '/notes/': typeof NotesIndexRoute
-  '/ssr-lab/': typeof SsrLabIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
 }
 export interface FileRouteTypes {
@@ -192,7 +139,6 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/notes'
-    | '/ssr-lab'
     | '/about'
     | '/health'
     | '/login'
@@ -200,14 +146,9 @@ export interface FileRouteTypes {
     | '/robots.txt'
     | '/sitemap.xml'
     | '/api/notes'
-    | '/api/stats'
     | '/notes/$noteId'
     | '/notes/new'
-    | '/ssr-lab/client'
-    | '/ssr-lab/data-only'
-    | '/ssr-lab/full'
     | '/notes/'
-    | '/ssr-lab/'
     | '/api/auth/$'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -219,20 +160,14 @@ export interface FileRouteTypes {
     | '/robots.txt'
     | '/sitemap.xml'
     | '/api/notes'
-    | '/api/stats'
     | '/notes/$noteId'
     | '/notes/new'
-    | '/ssr-lab/client'
-    | '/ssr-lab/data-only'
-    | '/ssr-lab/full'
     | '/notes'
-    | '/ssr-lab'
     | '/api/auth/$'
   id:
     | '__root__'
     | '/'
     | '/notes'
-    | '/ssr-lab'
     | '/about'
     | '/health'
     | '/login'
@@ -240,21 +175,15 @@ export interface FileRouteTypes {
     | '/robots.txt'
     | '/sitemap.xml'
     | '/api/notes'
-    | '/api/stats'
     | '/notes/$noteId'
     | '/notes/new'
-    | '/ssr-lab/client'
-    | '/ssr-lab/data-only'
-    | '/ssr-lab/full'
     | '/notes/'
-    | '/ssr-lab/'
     | '/api/auth/$'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   NotesRouteRoute: typeof NotesRouteRouteWithChildren
-  SsrLabRouteRoute: typeof SsrLabRouteRouteWithChildren
   AboutRoute: typeof AboutRoute
   HealthRoute: typeof HealthRoute
   LoginRoute: typeof LoginRoute
@@ -262,7 +191,6 @@ export interface RootRouteChildren {
   RobotsDottxtRoute: typeof RobotsDottxtRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   ApiNotesRoute: typeof ApiNotesRoute
-  ApiStatsRoute: typeof ApiStatsRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
 }
 
@@ -324,25 +252,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SitemapDotxmlRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/ssr-lab': {
-      id: '/ssr-lab'
-      path: '/ssr-lab'
-      fullPath: '/ssr-lab'
-      preLoaderRoute: typeof SsrLabRouteRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/api/notes': {
       id: '/api/notes'
       path: '/api/notes'
       fullPath: '/api/notes'
       preLoaderRoute: typeof ApiNotesRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/stats': {
-      id: '/api/stats'
-      path: '/api/stats'
-      fullPath: '/api/stats'
-      preLoaderRoute: typeof ApiStatsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/notes/': {
@@ -365,34 +279,6 @@ declare module '@tanstack/react-router' {
       fullPath: '/notes/new'
       preLoaderRoute: typeof NotesNewRouteImport
       parentRoute: typeof NotesRouteRoute
-    }
-    '/ssr-lab/': {
-      id: '/ssr-lab/'
-      path: '/'
-      fullPath: '/ssr-lab/'
-      preLoaderRoute: typeof SsrLabIndexRouteImport
-      parentRoute: typeof SsrLabRouteRoute
-    }
-    '/ssr-lab/client': {
-      id: '/ssr-lab/client'
-      path: '/client'
-      fullPath: '/ssr-lab/client'
-      preLoaderRoute: typeof SsrLabClientRouteImport
-      parentRoute: typeof SsrLabRouteRoute
-    }
-    '/ssr-lab/data-only': {
-      id: '/ssr-lab/data-only'
-      path: '/data-only'
-      fullPath: '/ssr-lab/data-only'
-      preLoaderRoute: typeof SsrLabDataOnlyRouteImport
-      parentRoute: typeof SsrLabRouteRoute
-    }
-    '/ssr-lab/full': {
-      id: '/ssr-lab/full'
-      path: '/full'
-      fullPath: '/ssr-lab/full'
-      preLoaderRoute: typeof SsrLabFullRouteImport
-      parentRoute: typeof SsrLabRouteRoute
     }
     '/api/auth/$': {
       id: '/api/auth/$'
@@ -420,28 +306,9 @@ const NotesRouteRouteWithChildren = NotesRouteRoute._addFileChildren(
   NotesRouteRouteChildren,
 )
 
-interface SsrLabRouteRouteChildren {
-  SsrLabClientRoute: typeof SsrLabClientRoute
-  SsrLabDataOnlyRoute: typeof SsrLabDataOnlyRoute
-  SsrLabFullRoute: typeof SsrLabFullRoute
-  SsrLabIndexRoute: typeof SsrLabIndexRoute
-}
-
-const SsrLabRouteRouteChildren: SsrLabRouteRouteChildren = {
-  SsrLabClientRoute: SsrLabClientRoute,
-  SsrLabDataOnlyRoute: SsrLabDataOnlyRoute,
-  SsrLabFullRoute: SsrLabFullRoute,
-  SsrLabIndexRoute: SsrLabIndexRoute,
-}
-
-const SsrLabRouteRouteWithChildren = SsrLabRouteRoute._addFileChildren(
-  SsrLabRouteRouteChildren,
-)
-
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   NotesRouteRoute: NotesRouteRouteWithChildren,
-  SsrLabRouteRoute: SsrLabRouteRouteWithChildren,
   AboutRoute: AboutRoute,
   HealthRoute: HealthRoute,
   LoginRoute: LoginRoute,
@@ -449,7 +316,6 @@ const rootRouteChildren: RootRouteChildren = {
   RobotsDottxtRoute: RobotsDottxtRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   ApiNotesRoute: ApiNotesRoute,
-  ApiStatsRoute: ApiStatsRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
 }
 export const routeTree = rootRouteImport

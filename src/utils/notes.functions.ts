@@ -9,7 +9,6 @@ import { NoteId, NoteInput } from './schemas'
 export const getNotes = createServerFn()
   .middleware([authMiddleware]) // 🔐 must be logged in
   .handler(async ({ context }) => {
-    console.log('📂 getNotes running on the SERVER')
     return listNotes(context.user.id) // 🔒 only MY notes
   })
 
@@ -18,7 +17,6 @@ export const getNote = createServerFn()
   .middleware([authMiddleware]) // 🔐 must be logged in
   .validator(NoteId) // 📋 Zod checks the input
   .handler(async ({ data, context }) => {
-    console.log(`📂 getNote(${data.id}) running on the SERVER`)
     return findNote(data.id, context.user.id) // 🔒 only if it's MINE
   })
 
@@ -29,7 +27,6 @@ export const createNote = createServerFn({ method: 'POST' })
   .middleware([authMiddleware]) // 🔐 must be logged in
   .validator(NoteInput) // 📋 Zod checks the input on the server
   .handler(async ({ data, context }) => {
-    console.log(`✏️ createNote("${data.title}") running on the SERVER`)
     return insertNote(context.user.id, data) // 🔒 owned by ME
   })
 
@@ -38,20 +35,16 @@ export const deleteNote = createServerFn({ method: 'POST' })
   .middleware([authMiddleware]) // 🔐 must be logged in
   .validator(NoteId) // 📋 Zod checks the input
   .handler(async ({ data, context }) => {
-    console.log(`🗑️ deleteNote(${data.id}) running on the SERVER`)
     await removeNote(data.id, context.user.id) // 🔒 only if it's MINE
   })
 
-// ---------- SLOW (Lesson 9) ----------
+// ---------- STATS ----------
 
-// Note stats — pretend this calls a SLOW outside service (AI, analytics...)
+// Note stats: word count + reading time
 export const getNoteStats = createServerFn()
   .middleware([authMiddleware]) // 🔐 must be logged in
   .validator(NoteId) // 📋 Zod checks the input
   .handler(async ({ data, context }) => {
-    console.log(`🐢 getNoteStats(${data.id}) started — takes 2 seconds`)
-    await new Promise((resolve) => setTimeout(resolve, 2000)) // 🐢 the slow part
-
     const note = await findNote(data.id, context.user.id)
     const words = note ? note.body.split(/\s+/).filter(Boolean).length : 0
     return { words, readingSeconds: Math.max(1, Math.round(words / 3)) }
