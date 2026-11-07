@@ -26,8 +26,18 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     //    Runs on every navigation; login/logout call router.invalidate() to re-run it.
     // 📖 https://tanstack.com/start/latest/docs/framework/react/guide/authentication
     beforeLoad: async () => {
-      const session = await getSession()
-      return { user: session?.user ?? null }
+      // 🧯 If the check itself fails (database down, network...), don't break EVERY page.
+      //    Docs pattern: wrap an auth check that can throw in try/catch.
+      //    Root serves public pages too → on failure count as logged out (not redirect).
+      //    Private data stays safe: authMiddleware still checks on the server.
+      // 📖 https://tanstack.com/router/latest/docs/framework/react/guide/authenticated-routes
+      try {
+        const session = await getSession()
+        return { user: session?.user ?? null }
+      } catch (error) {
+        console.error('Session check failed:', error) // real error → logs
+        return { user: null }
+      }
     },
     // 🔒 Every page now shows who's logged in → no shared caches may keep a copy
     headers: () => ({ 'Cache-Control': 'private, no-store' }),

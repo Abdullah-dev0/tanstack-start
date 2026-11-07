@@ -24,6 +24,17 @@ export const auth = betterAuth({
   emailAndPassword: {
     enabled: true,
   },
+  // ⚡ COOKIE CACHE: keep a short-lived, signed copy of the session in a cookie,
+  //    so checking "who is logged in?" (root beforeLoad, every click) skips the database.
+  //    ⚠️ Trade-off (docs): a revoked session can stay active on other devices
+  //    until maxAge runs out.
+  // 📖 https://www.better-auth.com/docs/concepts/session-management
+  session: {
+    cookieCache: {
+      enabled: true,
+      maxAge: 5 * 60, // 5 minutes (in seconds)
+    },
+  },
   // 🚦 RATE LIMIT: stop password guessing.
   // 📖 https://www.better-auth.com/docs/concepts/rate-limit
   // Default: OFF in dev, ON in production (100 requests / 10s, sign-in: 3 / 10s).
