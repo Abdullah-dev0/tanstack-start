@@ -13,14 +13,8 @@ const config = defineConfig({
     // 📖 https://tanstack.com/devtools/latest/docs/production — must be the FIRST plugin
     devtools(),
     tailwindcss(),
-    tanstackStart({
-      // 📄 PRERENDER: build these pages into static HTML at BUILD time
-      prerender: {
-        enabled: true,
-        crawlLinks: false, // don't follow links — only the pages below
-        filter: ({ path }) => path === '/about',
-      },
-    }),
+    // (Prerendering /about was removed: every page shows the logged-in user now.)
+    tanstackStart(),
     viteReact(),
   ],
 })

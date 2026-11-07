@@ -10,6 +10,7 @@ import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
 import { TanStackDevtools } from '@tanstack/react-devtools'
 import Footer from '../components/Footer'
 import Header from '../components/Header'
+import { getSession } from '../lib/auth.functions'
 
 import appCss from '../styles.css?url'
 
@@ -20,6 +21,16 @@ const THEME_INIT_SCRIPT = `(function(){try{var stored=window.localStorage.getIte
 // 📖 https://tanstack.com/router/latest/docs/framework/react/guide/router-context
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
   {
+    // 👤 WHO IS LOGGED IN? Loaded ONCE here → every page + component can read it:
+    //    const { user } = Route.useRouteContext()  (Route from this file)
+    //    Runs on every navigation; login/logout call router.invalidate() to re-run it.
+    // 📖 https://tanstack.com/start/latest/docs/framework/react/guide/authentication
+    beforeLoad: async () => {
+      const session = await getSession()
+      return { user: session?.user ?? null }
+    },
+    // 🔒 Every page now shows who's logged in → no shared caches may keep a copy
+    headers: () => ({ 'Cache-Control': 'private, no-store' }),
     head: () => ({
       meta: [
         {

@@ -1,7 +1,7 @@
-// ℹ️ /about — a public page about the app (prerendered at build time).
+// ℹ️ /about — a public page about the app.
 import { createFileRoute } from '@tanstack/react-router'
 
-// 🚪 Route settings: SEO tags, cache headers, and the page component
+// 🚪 Route settings: SEO tags and the page component
 export const Route = createFileRoute('/about')({
   // 🔎 SEO for the about page
   head: () => ({
@@ -14,13 +14,8 @@ export const Route = createFileRoute('/about')({
       { property: 'og:title', content: 'About | My Notes' },
     ],
   }),
-  // 🌍 PUBLIC page, same for everyone → a CDN may keep a copy
-  // 📖 https://tanstack.com/start/latest/docs/framework/react/guide/isr
-  headers: () => ({
-    // Cache at CDN for 1 hour, allow stale content for up to 1 day
-    'Cache-Control':
-      'public, max-age=3600, s-maxage=3600, stale-while-revalidate=86400',
-  }),
+  // ℹ️ No public CDN cache / prerender anymore: the navbar shows WHO is logged in,
+  //    so this page is no longer the same for everyone (see __root.tsx beforeLoad).
   component: About,
 })
 

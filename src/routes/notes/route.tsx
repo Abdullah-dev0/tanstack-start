@@ -1,14 +1,5 @@
-// 🔒 Layout for every /notes page: login check, title bar, log out button.
-import {
-  Link,
-  Outlet,
-  createFileRoute,
-  redirect,
-  useNavigate,
-} from '@tanstack/react-router'
-import { useQueryClient } from '@tanstack/react-query'
-import { getSession } from '../../lib/auth.functions'
-import { authClient } from '../../lib/auth-client'
+// 🔒 Layout for every /notes page: login check and the title bar.
+import { Link, Outlet, createFileRoute, redirect } from '@tanstack/react-router'
 
 // 🚪 Route settings: no-cache header + login guard
 export const Route = createFileRoute('/notes')({
@@ -17,27 +8,20 @@ export const Route = createFileRoute('/notes')({
   headers: () => ({ 'Cache-Control': 'no-store' }),
 
   // 🚪 PAGE GUARD: runs before ANY /notes page loads.
-  // Not logged in? → send to /login.
+  // The user was already loaded by __root.tsx → just read it from context
+  // (no second getSession() call). Not logged in? → send to /login.
   // (This is for a nice UX. The real security is authMiddleware.)
-  beforeLoad: async () => {
-    const session = await getSession()
-    if (!session) throw redirect({ to: '/login' })
-    return { user: session.user } // 👤 child pages can read it with Route.useRouteContext()
+  beforeLoad: ({ context }) => {
+    if (!context.user) throw redirect({ to: '/login' })
+    return { user: context.user } // 👤 now typed as "definitely logged in" for child pages
   },
   component: NotesLayout,
 })
 
-// 🖼️ Title bar (email, log out, new note) + the child page in <Outlet />
+// 🖼️ Title bar (email, new note) + the child page in <Outlet />
+// (Log out lives in the navbar now — see Header.tsx)
 function NotesLayout() {
   const { user } = Route.useRouteContext()
-  const navigate = useNavigate()
-  const queryClient = useQueryClient()
-
-  async function handleLogout() {
-    await authClient.signOut() // 📖 Better Auth: ends the session
-    queryClient.clear() // 🧹 forget this user's cached notes (so the next user can't see them)
-    await navigate({ to: '/login' })
-  }
 
   return (
     <main className="mx-auto max-w-5xl px-6 pt-12 sm:pt-16">
@@ -51,21 +35,12 @@ function NotesLayout() {
             {user.email}
           </p>
         </div>
-        <div className="flex items-center gap-2">
-          <button
-            type="button"
-            onClick={handleLogout}
-            className="rounded-lg px-3 py-2 text-sm font-medium text-(--muted) transition hover:bg-(--sunken) hover:text-(--ink)"
-          >
-            Log out
-          </button>
-          <Link
-            to="/notes/new"
-            className="inline-flex items-center gap-1.5 rounded-lg bg-(--accent) px-4 py-2 text-sm font-medium text-(--accent-ink) shadow-sm transition hover:opacity-90 active:scale-95"
-          >
-            <span className="text-base leading-none">+</span> New note
-          </Link>
-        </div>
+        <Link
+          to="/notes/new"
+          className="inline-flex items-center gap-1.5 rounded-lg bg-(--accent) px-4 py-2 text-sm font-medium text-(--accent-ink) shadow-sm transition hover:opacity-90 active:scale-95"
+        >
+          <span className="text-base leading-none">+</span> New note
+        </Link>
       </div>
 
       <Outlet />
