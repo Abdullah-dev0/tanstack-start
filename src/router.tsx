@@ -12,7 +12,24 @@ export function getRouter() {
   // 📦 TanStack Query's cache. Created INSIDE getRouter → a new one per request
   //    on the server, so one user's data never leaks to another (docs).
   // 📖 https://tanstack.com/router/latest/docs/framework/react/integrations/query
-  const queryClient = new QueryClient()
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      dehydrate: {
+        // 🙈 Errors the server sends to the browser are hidden ("redacted") by default,
+        //    so secrets in error messages don't leak. Show the real message in dev only.
+        // 📖 https://tanstack.com/query/latest/docs/framework/react/reference/functions/dehydrate
+        shouldRedactErrors: () => !import.meta.env.DEV,
+      },
+    },
+  })
+
+  // 🐛 WORKAROUND for a TanStack Query bug: on a page reload, a query the server
+  //    streamed while still loading ignores the retry set in its queryOptions.
+  //    Setting it here (on the client itself) makes retry: false work right away.
+  //    Remove when the fix ships (PR #12511).
+  // 📖 https://github.com/TanStack/query/issues/12529
+  // 📖 https://tanstack.com/query/latest/docs/reference/QueryClient (setQueryDefaults)
+  queryClient.setQueryDefaults(['demo-posts'], { retry: false })
 
   const router = createTanStackRouter({
     routeTree,

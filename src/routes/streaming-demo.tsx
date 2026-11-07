@@ -2,9 +2,9 @@
 // The page shell shows instantly, the slow posts stream in ~2s later.
 // 📖 https://tanstack.com/router/latest/docs/framework/react/integrations/query
 import { noop } from '@tanstack/react-query'
-import { createFileRoute } from '@tanstack/react-router'
+import { CatchBoundary, createFileRoute } from '@tanstack/react-router'
 import { Suspense } from 'react'
-import { Cooking, Posts } from '../components/PostsCard'
+import { Cooking, Posts, PostsError } from '../components/PostsCard'
 import { postsQuery } from '../utils/demo-posts.queries'
 
 // 🚪 THE PAGE: when you walk in, place the order right away
@@ -31,9 +31,14 @@ function StreamingDemo() {
       </p>
 
       <section className="mt-8 rounded-xl border border-(--line) bg-(--card) p-6">
-        <Suspense fallback={<Cooking />}>
-          <Posts />
-        </Suspense>
+        {/* 🧯 Catches a posts error HERE, so the rest of the page keeps showing.
+            (Without it, the error goes up to the route and replaces the whole page.)
+            📖 https://tanstack.com/router/latest/docs/framework/react/api/router/catchBoundaryComponent */}
+        <CatchBoundary getResetKey={() => 'posts'} errorComponent={PostsError}>
+          <Suspense fallback={<Cooking />}>
+            <Posts />
+          </Suspense>
+        </CatchBoundary>
       </section>
     </main>
   )

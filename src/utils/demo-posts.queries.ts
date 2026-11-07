@@ -7,4 +7,5 @@ import { getPosts } from './demo-posts.functions'
 export const postsQuery = queryOptions({
   queryKey: ['demo-posts'],
   queryFn: () => getPosts(),
+  retry: false, //
 })
