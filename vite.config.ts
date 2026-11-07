@@ -1,10 +1,9 @@
-import { defineConfig } from 'vite'
 import { devtools } from '@tanstack/devtools-vite'
 import { tanstackStart } from '@tanstack/react-start/plugin/vite'
-import { nitro } from 'nitro/vite'
+import { defineConfig } from 'vite'
 
-import viteReact from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
+import viteReact from '@vitejs/plugin-react'
 
 const config = defineConfig({
   resolve: { tsconfigPaths: true },
@@ -21,9 +20,6 @@ const config = defineConfig({
         filter: ({ path }) => path === '/about',
       },
     }),
-    // 🖥️ Nitro = turns the app into a Node server for a VPS (node .output/server/index.mjs)
-    // 📖 https://tanstack.com/start/latest/docs/framework/react/guide/hosting
-    nitro(),
     viteReact(),
   ],
 })

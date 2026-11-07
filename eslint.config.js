@@ -15,6 +15,13 @@ export default [
     },
   },
   {
-    ignores: ['eslint.config.js', 'prettier.config.js'],
+    ignores: [
+      'eslint.config.js',
+      'prettier.config.js',
+      // build output (made by `npm run build`), not our code
+      '.output/**',
+      '.nitro/**',
+      'dist/**',
+    ],
   },
 ]
