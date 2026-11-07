@@ -1,3 +1,4 @@
+// 🌐 /api/notes — returns the logged-in user's notes as JSON.
 import { createFileRoute } from '@tanstack/react-router'
 import { auth } from '../../lib/auth'
 import { listNotes } from '../../utils/notes.server'

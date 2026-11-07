@@ -5,6 +5,7 @@ import { createFileRoute } from '@tanstack/react-router'
 import { sql } from 'drizzle-orm'
 import { db } from '../db/client.server'
 
+// GET /health → JSON with the app + database status
 export const Route = createFileRoute('/health')({
   server: {
     handlers: {
@@ -28,6 +29,7 @@ export const Route = createFileRoute('/health')({
   },
 })
 
+// Run a tiny query to see if the database answers
 async function checkDatabase() {
   try {
     await db.execute(sql`SELECT 1`)

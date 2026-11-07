@@ -1,7 +1,9 @@
+// 🌗 Button that switches the theme: light → dark → auto (follow the system).
 import { useEffect, useState } from 'react'
 
 type ThemeMode = 'light' | 'dark' | 'auto'
 
+// Read the saved theme from localStorage ('auto' if none, or on the server)
 function getInitialMode(): ThemeMode {
   if (typeof window === 'undefined') {
     return 'auto'
@@ -15,6 +17,7 @@ function getInitialMode(): ThemeMode {
   return 'auto'
 }
 
+// Put the theme on <html> (class + data-theme) so the CSS colors switch
 function applyThemeMode(mode: ThemeMode) {
   const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
   const resolved = mode === 'auto' ? (prefersDark ? 'dark' : 'light') : mode
@@ -31,6 +34,7 @@ function applyThemeMode(mode: ThemeMode) {
   document.documentElement.style.colorScheme = resolved
 }
 
+// The button itself: each click moves to the next mode and saves it
 export default function ThemeToggle() {
   const [mode, setMode] = useState<ThemeMode>('auto')
 

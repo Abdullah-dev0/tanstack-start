@@ -1,5 +1,7 @@
+// ℹ️ /about — a public page about the app (prerendered at build time).
 import { createFileRoute } from '@tanstack/react-router'
 
+// 🚪 Route settings: SEO tags, cache headers, and the page component
 export const Route = createFileRoute('/about')({
   // 🔎 SEO for the about page
   head: () => ({
@@ -22,6 +24,7 @@ export const Route = createFileRoute('/about')({
   component: About,
 })
 
+// 🖼️ The page content
 function About() {
   return (
     <main className="mx-auto max-w-2xl px-6 pt-20 sm:pt-28">

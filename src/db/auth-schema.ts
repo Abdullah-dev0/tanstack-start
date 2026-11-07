@@ -1,3 +1,4 @@
+// 🔐 Database tables Better Auth uses: users, sessions, logins, tokens, rate limits.
 import { relations } from 'drizzle-orm'
 import {
   pgTable,
@@ -9,6 +10,7 @@ import {
   index,
 } from 'drizzle-orm/pg-core'
 
+// 👤 Users (name, email, ...)
 export const user = pgTable('user', {
   id: text('id').primaryKey(),
   name: text('name').notNull(),
@@ -22,6 +24,7 @@ export const user = pgTable('user', {
     .notNull(),
 })
 
+// 🎫 Logged-in sessions (one row per login)
 export const session = pgTable(
   'session',
   {
@@ -41,6 +44,7 @@ export const session = pgTable(
   (table) => [index('session_userId_idx').on(table.userId)],
 )
 
+// 🔑 How each user logs in (e.g. email + hashed password)
 export const account = pgTable(
   'account',
   {
@@ -65,6 +69,7 @@ export const account = pgTable(
   (table) => [index('account_userId_idx').on(table.userId)],
 )
 
+// ✉️ One-time tokens (e.g. email verification)
 export const verification = pgTable(
   'verification',
   {
@@ -81,6 +86,7 @@ export const verification = pgTable(
   (table) => [index('verification_identifier_idx').on(table.identifier)],
 )
 
+// 🚦 Request counters that stop too many login attempts
 export const rateLimit = pgTable('rate_limit', {
   id: text('id').primaryKey(),
   key: text('key').notNull().unique(),
@@ -88,6 +94,7 @@ export const rateLimit = pgTable('rate_limit', {
   lastRequest: bigint('last_request', { mode: 'number' }).notNull(),
 })
 
+// 🔗 Relations: tell Drizzle how the tables connect
 export const userRelations = relations(user, ({ many }) => ({
   sessions: many(session),
   accounts: many(account),

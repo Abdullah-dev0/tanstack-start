@@ -1,7 +1,9 @@
+// 📋 /notes — the list of my notes, with a search box.
 import { useSuspenseQuery } from '@tanstack/react-query'
 import { Link, createFileRoute, useNavigate } from '@tanstack/react-router'
 import { notesQuery } from '../../utils/notes.queries'
 
+// 🚪 Route settings: the ?q= search param + load the notes
 export const Route = createFileRoute('/notes/')({
   // Turns the raw ?q= from the URL into typed state
   validateSearch: (search: Record<string, unknown>): { q?: string } => ({
@@ -14,6 +16,7 @@ export const Route = createFileRoute('/notes/')({
   component: NotesIndex,
 })
 
+// 🖼️ Search box + list of notes
 function NotesIndex() {
   const { q = '' } = Route.useSearch()
   // 📦 Read the notes FROM the Query cache (updates automatically when it changes)

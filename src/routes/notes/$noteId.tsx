@@ -1,3 +1,4 @@
+// 📄 /notes/:noteId — one note: its text, stats, and a delete button.
 import { useMutation, useSuspenseQuery } from '@tanstack/react-query'
 import {
   Await,
@@ -11,6 +12,7 @@ import { useServerFn } from '@tanstack/react-start'
 import { deleteNote, getNoteStats } from '../../utils/notes.functions'
 import { noteQuery, notesQuery } from '../../utils/notes.queries'
 
+// 🚪 Route settings: load the note, tab title, and the 4 screens
 export const Route = createFileRoute('/notes/$noteId')({
   // 1. LOAD the data
   loader: async ({ params, context }) => {
@@ -39,6 +41,7 @@ export const Route = createFileRoute('/notes/$noteId')({
   errorComponent: NoteError, //       💥 something crashed
 })
 
+// Shared styles for the card and the back link
 const card =
   'mx-auto max-w-2xl animate-rise rounded-xl border border-(--line) bg-(--card) p-8 shadow-sm sm:p-12'
 const backLink = 'text-sm text-(--muted) transition hover:text-(--ink)'

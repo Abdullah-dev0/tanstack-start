@@ -1,3 +1,4 @@
+// 🔒 Layout for every /notes page: login check, title bar, log out button.
 import {
   Link,
   Outlet,
@@ -9,6 +10,7 @@ import { useQueryClient } from '@tanstack/react-query'
 import { getSession } from '../../lib/auth.functions'
 import { authClient } from '../../lib/auth-client'
 
+// 🚪 Route settings: no-cache header + login guard
 export const Route = createFileRoute('/notes')({
   // 🔒 PRIVATE pages (logged-in data) → nobody may keep a copy
   // 📖 https://tanstack.com/start/latest/docs/framework/react/guide/server-functions
@@ -25,6 +27,7 @@ export const Route = createFileRoute('/notes')({
   component: NotesLayout,
 })
 
+// 🖼️ Title bar (email, log out, new note) + the child page in <Outlet />
 function NotesLayout() {
   const { user } = Route.useRouteContext()
   const navigate = useNavigate()

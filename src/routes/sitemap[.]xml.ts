@@ -3,11 +3,13 @@
 // Notes are private (behind login), so they are NOT in the sitemap.
 import { createFileRoute } from '@tanstack/react-router'
 
+// The pages listed in the sitemap
 const publicPages = [
   { path: '/', changefreq: 'daily', priority: '1.0' },
   { path: '/about', changefreq: 'monthly', priority: '0.5' },
 ]
 
+// GET /sitemap.xml → the XML list of pages
 export const Route = createFileRoute('/sitemap.xml')({
   server: {
     handlers: {

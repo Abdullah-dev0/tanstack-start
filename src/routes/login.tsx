@@ -1,3 +1,4 @@
+// 🔑 /login — the log in form.
 import { useState } from 'react'
 import {
   Link,
@@ -8,14 +9,17 @@ import {
 import { useQueryClient } from '@tanstack/react-query'
 import { authClient } from '../lib/auth-client'
 
+// 🚪 Route settings: tab title and the page component
 export const Route = createFileRoute('/login')({
   head: () => ({ meta: [{ title: 'Log in | My Notes' }] }),
   component: LoginPage,
 })
 
+// Shared styles for the text inputs
 const input =
   'w-full rounded-lg border border-(--line) bg-(--paper) px-3.5 py-2.5 text-sm outline-none transition placeholder:text-(--faint) focus:border-(--accent) focus:ring-4 focus:ring-(--accent-soft)'
 
+// 🖼️ The login form (email + password)
 function LoginPage() {
   const router = useRouter()
   const queryClient = useQueryClient()

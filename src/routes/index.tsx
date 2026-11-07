@@ -1,5 +1,7 @@
+// 🏠 / — the public home (landing) page.
 import { Link, createFileRoute } from '@tanstack/react-router'
 
+// 🚪 Route settings: SEO tags and the page component
 export const Route = createFileRoute('/')({
   // 🔎 SEO for the home page
   // 📖 https://tanstack.com/start/latest/docs/framework/react/guide/seo
@@ -34,6 +36,7 @@ export const Route = createFileRoute('/')({
   component: App,
 })
 
+// The 3 feature boxes at the bottom of the page
 const features = [
   ['Type-safe routing', 'Routes and links stay in sync across every page.'],
   [
@@ -53,6 +56,7 @@ const previewNotes = [
   ['Meeting notes', 'Ship the redesign on Friday'],
 ]
 
+// 🖼️ The home page content
 function App() {
   return (
     <main className="mx-auto max-w-5xl px-6">

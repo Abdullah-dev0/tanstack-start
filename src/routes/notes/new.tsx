@@ -1,3 +1,4 @@
+// ✏️ /notes/new — form to create a new note.
 import { useState } from 'react'
 import { useMutation } from '@tanstack/react-query'
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
@@ -6,10 +7,12 @@ import { createNote } from '../../utils/notes.functions'
 import { notesQuery } from '../../utils/notes.queries'
 import { NoteInput } from '../../utils/schemas'
 
+// 🚪 Route settings: just the page component
 export const Route = createFileRoute('/notes/new')({
   component: NewNote,
 })
 
+// 🖼️ The new note form (title + body)
 function NewNote() {
   const createNoteFn = useServerFn(createNote)
   const navigate = useNavigate()

@@ -10,6 +10,7 @@ import { serverEnv } from '../utils/env.server'
 
 const env = serverEnv() // 📋 Zod checks the secrets first — clear error if one is missing
 
+// The Better Auth server (used by /api/auth/* and to read the session)
 export const auth = betterAuth({
   // 📖 https://www.better-auth.com/docs/reference/options
   secret: env.BETTER_AUTH_SECRET,

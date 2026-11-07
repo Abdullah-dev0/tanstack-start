@@ -1,3 +1,4 @@
+// 🧑‍🍳 Server functions for notes: the pages call these, they run on the server.
 import { createServerFn } from '@tanstack/react-start'
 import { authMiddleware } from '../lib/auth.functions'
 import { findNote, insertNote, listNotes, removeNote } from './notes.server'

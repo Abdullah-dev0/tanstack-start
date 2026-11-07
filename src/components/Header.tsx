@@ -1,3 +1,4 @@
+// 🧭 Top navbar shown on every page: logo, links and the theme button.
 import { Link } from '@tanstack/react-router'
 import ThemeToggle from './ThemeToggle'
 
@@ -5,6 +6,7 @@ import ThemeToggle from './ThemeToggle'
 const navLink =
   'rounded-md px-3 py-1.5 text-sm font-medium text-(--muted) transition hover:bg-(--sunken) hover:text-(--ink) data-[status=active]:text-(--ink) data-[status=active]:bg-(--sunken)'
 
+// The navbar itself
 export default function Header() {
   return (
     <header className="sticky top-0 z-50 border-b border-(--line) bg-(--paper)/85 backdrop-blur-md">
@@ -26,6 +28,9 @@ export default function Header() {
           </Link>
           <Link to="/notes" className={navLink}>
             Notes
+          </Link>
+          <Link to="/streaming-demo" className={navLink}>
+            Streaming
           </Link>
           <Link to="/about" className={`${navLink} hidden sm:inline-flex`}>
             About

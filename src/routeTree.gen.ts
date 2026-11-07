@@ -17,6 +17,7 @@ import { Route as NotesRouteRouteImport } from './routes/notes/route'
 import { Route as RegisterRouteImport } from './routes/register'
 import { Route as RobotsDottxtRouteImport } from './routes/robots[.]txt'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
+import { Route as StreamingDemoRouteImport } from './routes/streaming-demo'
 import { Route as ApiNotesRouteImport } from './routes/api/notes'
 import { Route as NotesIndexRouteImport } from './routes/notes/index'
 import { Route as NotesNoteIdRouteImport } from './routes/notes/$noteId'
@@ -63,6 +64,11 @@ const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   path: '/sitemap.xml',
   getParentRoute: () => rootRouteImport,
 } as any)
+const StreamingDemoRoute = StreamingDemoRouteImport.update({
+  id: '/streaming-demo',
+  path: '/streaming-demo',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiNotesRoute = ApiNotesRouteImport.update({
   id: '/api/notes',
   path: '/api/notes',
@@ -98,6 +104,7 @@ export interface FileRoutesByFullPath {
   '/register': typeof RegisterRoute
   '/robots.txt': typeof RobotsDottxtRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/streaming-demo': typeof StreamingDemoRoute
   '/api/notes': typeof ApiNotesRoute
   '/notes/$noteId': typeof NotesNoteIdRoute
   '/notes/new': typeof NotesNewRoute
@@ -112,6 +119,7 @@ export interface FileRoutesByTo {
   '/register': typeof RegisterRoute
   '/robots.txt': typeof RobotsDottxtRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/streaming-demo': typeof StreamingDemoRoute
   '/api/notes': typeof ApiNotesRoute
   '/notes/$noteId': typeof NotesNoteIdRoute
   '/notes/new': typeof NotesNewRoute
@@ -128,6 +136,7 @@ export interface FileRoutesById {
   '/register': typeof RegisterRoute
   '/robots.txt': typeof RobotsDottxtRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/streaming-demo': typeof StreamingDemoRoute
   '/api/notes': typeof ApiNotesRoute
   '/notes/$noteId': typeof NotesNoteIdRoute
   '/notes/new': typeof NotesNewRoute
@@ -145,6 +154,7 @@ export interface FileRouteTypes {
     | '/register'
     | '/robots.txt'
     | '/sitemap.xml'
+    | '/streaming-demo'
     | '/api/notes'
     | '/notes/$noteId'
     | '/notes/new'
@@ -159,6 +169,7 @@ export interface FileRouteTypes {
     | '/register'
     | '/robots.txt'
     | '/sitemap.xml'
+    | '/streaming-demo'
     | '/api/notes'
     | '/notes/$noteId'
     | '/notes/new'
@@ -174,6 +185,7 @@ export interface FileRouteTypes {
     | '/register'
     | '/robots.txt'
     | '/sitemap.xml'
+    | '/streaming-demo'
     | '/api/notes'
     | '/notes/$noteId'
     | '/notes/new'
@@ -190,6 +202,7 @@ export interface RootRouteChildren {
   RegisterRoute: typeof RegisterRoute
   RobotsDottxtRoute: typeof RobotsDottxtRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
+  StreamingDemoRoute: typeof StreamingDemoRoute
   ApiNotesRoute: typeof ApiNotesRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
 }
@@ -250,6 +263,13 @@ declare module '@tanstack/react-router' {
       path: '/sitemap.xml'
       fullPath: '/sitemap.xml'
       preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/streaming-demo': {
+      id: '/streaming-demo'
+      path: '/streaming-demo'
+      fullPath: '/streaming-demo'
+      preLoaderRoute: typeof StreamingDemoRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/notes': {
@@ -315,6 +335,7 @@ const rootRouteChildren: RootRouteChildren = {
   RegisterRoute: RegisterRoute,
   RobotsDottxtRoute: RobotsDottxtRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
+  StreamingDemoRoute: StreamingDemoRoute,
   ApiNotesRoute: ApiNotesRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
 }

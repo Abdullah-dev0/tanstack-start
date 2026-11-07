@@ -1,3 +1,4 @@
+// ⚡ Vite settings: the plugins that build and run the app.
 import { devtools } from '@tanstack/devtools-vite'
 import { tanstackStart } from '@tanstack/react-start/plugin/vite'
 import { defineConfig } from 'vite'

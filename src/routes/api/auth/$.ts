@@ -4,6 +4,7 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { auth } from '../../../lib/auth'
 
+// Hand every GET/POST to /api/auth/* over to Better Auth
 export const Route = createFileRoute('/api/auth/$')({
   server: {
     handlers: {

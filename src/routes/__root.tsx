@@ -1,3 +1,4 @@
+// 🌳 Root route: the HTML shell (head, header, footer) that wraps EVERY page.
 import {
   HeadContent,
   Link,
@@ -12,6 +13,7 @@ import Header from '../components/Header'
 
 import appCss from '../styles.css?url'
 
+// Runs before the page shows → sets the saved theme early (no flash of wrong colors)
 const THEME_INIT_SCRIPT = `(function(){try{var stored=window.localStorage.getItem('theme');var mode=(stored==='light'||stored==='dark'||stored==='auto')?stored:'auto';var prefersDark=window.matchMedia('(prefers-color-scheme: dark)').matches;var resolved=mode==='auto'?(prefersDark?'dark':'light'):mode;var root=document.documentElement;root.classList.remove('light','dark');root.classList.add(resolved);if(mode==='auto'){root.removeAttribute('data-theme')}else{root.setAttribute('data-theme',mode)}root.style.colorScheme=resolved;}catch(e){}})();`
 
 // 📦 Tells TypeScript: every route's context has a queryClient
@@ -53,6 +55,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
   },
 )
 
+// 🔍 The 404 page
 function PageNotFound() {
   return (
     <main className="mx-auto flex min-h-[60vh] max-w-5xl flex-col items-center justify-center px-6 text-center">
@@ -70,6 +73,7 @@ function PageNotFound() {
   )
 }
 
+// 📄 The <html> around every page: head, navbar, page, footer, devtools
 function RootDocument({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" suppressHydrationWarning>

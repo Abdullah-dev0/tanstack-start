@@ -3,6 +3,7 @@
 // "[.]" in the file name = a real dot in the URL → /robots.txt
 import { createFileRoute } from '@tanstack/react-router'
 
+// GET /robots.txt → plain-text rules for search engines
 export const Route = createFileRoute('/robots.txt')({
   server: {
     handlers: {

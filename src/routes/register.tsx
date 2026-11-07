@@ -1,3 +1,4 @@
+// 🆕 /register — the create account form.
 import { useState } from 'react'
 import {
   Link,
@@ -9,14 +10,17 @@ import { useQueryClient } from '@tanstack/react-query'
 import { authClient } from '../lib/auth-client'
 import { RegisterInput } from '../utils/schemas'
 
+// 🚪 Route settings: tab title and the page component
 export const Route = createFileRoute('/register')({
   head: () => ({ meta: [{ title: 'Create account | My Notes' }] }),
   component: RegisterPage,
 })
 
+// Shared styles for the text inputs
 const input =
   'w-full rounded-lg border border-(--line) bg-(--paper) px-3.5 py-2.5 text-sm outline-none transition placeholder:text-(--faint) focus:border-(--accent) focus:ring-4 focus:ring-(--accent-soft)'
 
+// 🖼️ The sign up form (name + email + password)
 function RegisterPage() {
   const router = useRouter()
   const queryClient = useQueryClient()

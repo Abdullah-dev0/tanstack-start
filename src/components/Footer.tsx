@@ -1,3 +1,4 @@
+// 🦶 Footer shown at the bottom of every page (added in __root.tsx).
 export default function Footer() {
   const year = new Date().getFullYear()
 

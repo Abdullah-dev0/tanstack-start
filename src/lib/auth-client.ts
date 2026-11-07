@@ -3,4 +3,5 @@
 // baseURL is optional when the app and the auth API are on the same domain.
 import { createAuthClient } from 'better-auth/react'
 
+// Use authClient.signIn / signUp / signOut in the browser
 export const authClient = createAuthClient()

@@ -1,3 +1,4 @@
+// 🧭 Creates the router (and its Query cache). TanStack Start calls getRouter() per request.
 import { QueryClient } from '@tanstack/react-query'
 import {
   createRouter as createTanStackRouter,
